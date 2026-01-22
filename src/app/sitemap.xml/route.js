@@ -21,14 +21,14 @@
 //     headers: { 'Content-Type': 'application/xml' },
 //   });
 // }
-
-
 import { getAllWordSlugs } from '@/lib/api';
+
+export const dynamic = 'force-static'; // ← ADD THIS LINE
 
 export async function GET() {
   const slugs = await getAllWordSlugs();
 
-  const urls = (slugs || []).map(           // ← defensive
+  const urls = (slugs || []).map(
     (s) => `
   <url>
     <loc>https://www.w9999.app/${s.lf}-${s.lt}/${s.word}</loc>
