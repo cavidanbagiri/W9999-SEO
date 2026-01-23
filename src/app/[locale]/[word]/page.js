@@ -2,13 +2,16 @@ import { getAllWordSlugs, getWord } from '@/lib/api';
 
 export async function generateStaticParams() {
   const slugs = await getAllWordSlugs();          // [{lf:'en', lt:'es', word:'hello'}, …]
-  return slugs.map((s) => ({ locale: `${s.lf}-${s.lt}`, word: s.word }));
+  return slugs.map((s) => ({ 
+    locale: `${s.lf}-${s.lt}`, 
+    word: encodeURIComponent(s.word),
+    }));
 }
 
 export default async function Page({ params }) {
   const { locale, word } = await params;
   const [langFrom, langTo] = locale.split('-');
-  const data = await getWord(langFrom, langTo, word);
+  const data = await getWord(langFrom, langTo, decodeURIComponent(word));
 
   return (
     <main>
