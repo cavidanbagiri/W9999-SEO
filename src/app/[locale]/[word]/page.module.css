@@ -1,0 +1,636 @@
+/* src/app/[locale]/[word]/page.module.css */
+
+/* Reset and Base Styles */
+.html, .body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, sans-serif;
+  line-height: 1.6;
+  color: #1a1a1a;
+  background-color: #ffffff;
+}
+
+@media (prefers-color-scheme: dark) {
+  .html, .body {
+    color: #f0f0f0;
+    background-color: #0a0a0a;
+  }
+}
+
+/* Layout */
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Skip Link (Accessibility) */
+.skipLink {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: #0070f3;
+  color: white;
+  padding: 8px 16px;
+  text-decoration: none;
+  border-radius: 4px;
+  z-index: 100;
+}
+
+.skipLink:focus {
+  top: 10px;
+}
+
+/* Header */
+.header {
+  padding: 20px 0;
+  border-bottom: 1px solid #eaeaea;
+}
+
+@media (prefers-color-scheme: dark) {
+  .header {
+    border-bottom-color: #333;
+  }
+}
+
+.brand {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.brandName {
+  font-size: 24px;
+  font-weight: 700;
+  color: #0070f3;
+}
+
+.brandTagline {
+  font-size: 14px;
+  color: #666;
+}
+
+@media (prefers-color-scheme: dark) {
+  .brandTagline {
+    color: #999;
+  }
+}
+
+/* Main Content */
+.main {
+  padding: 40px 0;
+}
+
+/* Word Header */
+.wordHeader {
+  margin-bottom: 40px;
+}
+
+.word {
+  font-size: 48px;
+  font-weight: 700;
+  margin: 0 0 16px 0;
+  color: #1a1a1a;
+}
+
+@media (prefers-color-scheme: dark) {
+  .word {
+    color: #ffffff;
+  }
+}
+
+.pronunciation {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.ipa {
+  font-size: 20px;
+  color: #666;
+  font-family: 'Times New Roman', Times, serif;
+}
+
+.audioButton {
+  background: none;
+  border: 2px solid #0070f3;
+  color: #0070f3;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.audioButton:hover {
+  background: #0070f3;
+  color: white;
+}
+
+.metadata {
+  display: flex;
+  gap: 16px;
+}
+
+.level, .frequency {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.level {
+  background: #e6f7ff;
+  color: #0070f3;
+}
+
+.frequency {
+  background: #f6ffed;
+  color: #52c41a;
+}
+
+@media (prefers-color-scheme: dark) {
+  .level {
+    background: #003a8c;
+    color: #69c0ff;
+  }
+  .frequency {
+    background: #135200;
+    color: #95de64;
+  }
+}
+
+/* Sections */
+.sectionTitle {
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0 0 24px 0;
+  color: #1a1a1a;
+}
+
+@media (prefers-color-scheme: dark) {
+  .sectionTitle {
+    color: #ffffff;
+  }
+}
+
+/* Primary Translation */
+.primaryTranslation {
+  margin-bottom: 40px;
+}
+
+.translationCard {
+  background: #f5f5f5;
+  border-radius: 12px;
+  padding: 24px;
+  position: relative;
+}
+
+@media (prefers-color-scheme: dark) {
+  .translationCard {
+    background: #1a1a1a;
+  }
+}
+
+.targetLanguage {
+  display: inline-block;
+  background: #0070f3;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 12px;
+}
+
+.translatedWord {
+  font-size: 32px;
+  font-weight: 600;
+  margin: 0 0 20px 0;
+  color: #1a1a1a;
+}
+
+@media (prefers-color-scheme: dark) {
+  .translatedWord {
+    color: #ffffff;
+  }
+}
+
+.playButton {
+  background: #0070f3;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: background-color 0.2s ease;
+}
+
+.playButton:hover {
+  background: #0056cc;
+}
+
+/* All Translations */
+.allTranslations {
+  margin-bottom: 40px;
+}
+
+.translationGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.translationItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  background: #f9f9f9;
+  border-radius: 8px;
+  border: 1px solid #eaeaea;
+}
+
+@media (prefers-color-scheme: dark) {
+  .translationItem {
+    background: #1a1a1a;
+    border-color: #333;
+  }
+}
+
+.langCode {
+  font-size: 12px;
+  font-weight: 600;
+  color: #666;
+  text-transform: uppercase;
+}
+
+.transText {
+  flex: 1;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.smallAudioButton {
+  background: none;
+  border: 1px solid #ddd;
+  color: #666;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.smallAudioButton:hover {
+  border-color: #0070f3;
+  color: #0070f3;
+}
+
+@media (prefers-color-scheme: dark) {
+  .smallAudioButton {
+    border-color: #444;
+    color: #999;
+  }
+  .smallAudioButton:hover {
+    border-color: #0070f3;
+    color: #0070f3;
+  }
+}
+
+/* Meanings */
+.meanings {
+  margin-bottom: 40px;
+}
+
+.meaningsGrid {
+  display: grid;
+  gap: 16px;
+}
+
+.meaningCard {
+  padding: 20px;
+  background: #f9f9f9;
+  border-left: 4px solid #0070f3;
+  border-radius: 8px;
+}
+
+@media (prefers-color-scheme: dark) {
+  .meaningCard {
+    background: #1a1a1a;
+  }
+}
+
+.pos {
+  display: inline-block;
+  background: #e6f7ff;
+  color: #0070f3;
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 12px;
+}
+
+.definition {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+/* Example Sentences */
+.examples {
+  margin-bottom: 40px;
+}
+
+.examplesList {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.exampleItem {
+  padding: 20px;
+  background: #f9f9f9;
+  border-radius: 8px;
+  border: 1px solid #eaeaea;
+}
+
+@media (prefers-color-scheme: dark) {
+  .exampleItem {
+    background: #1a1a1a;
+    border-color: #333;
+  }
+}
+
+.sentence {
+  margin: 0 0 12px 0;
+  font-size: 18px;
+  font-style: italic;
+  line-height: 1.6;
+}
+
+.sentenceTranslation {
+  margin: 0;
+  font-size: 16px;
+  color: #666;
+  padding-left: 20px;
+  border-left: 3px solid #52c41a;
+}
+
+@media (prefers-color-scheme: dark) {
+  .sentenceTranslation {
+    color: #999;
+  }
+}
+
+/* Categories */
+.categories {
+  margin-bottom: 40px;
+}
+
+.categoryTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.categoryTag {
+  position: relative;
+  padding: 8px 16px;
+  background: #f0f0f0;
+  color: #333;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: help;
+}
+
+.categoryTag:hover .categoryTooltip {
+  visibility: visible;
+  opacity: 1;
+}
+
+.categoryTooltip {
+  visibility: hidden;
+  opacity: 0;
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #333;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: nowrap;
+  margin-bottom: 8px;
+  transition: opacity 0.2s ease;
+}
+
+.categoryTooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: #333;
+}
+
+@media (prefers-color-scheme: dark) {
+  .categoryTag {
+    background: #333;
+    color: #f0f0f0;
+  }
+}
+
+/* Related Words */
+.relatedWords {
+  margin-bottom: 40px;
+}
+
+.relatedWordsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 12px;
+}
+
+.relatedWord {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px;
+  background: #f5f5f5;
+  border-radius: 8px;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.2s ease;
+}
+
+.relatedWord:hover {
+  background: #e0e0e0;
+  transform: translateY(-2px);
+}
+
+@media (prefers-color-scheme: dark) {
+  .relatedWord {
+    background: #1a1a1a;
+  }
+  .relatedWord:hover {
+    background: #2a2a2a;
+  }
+}
+
+.relatedWord span:first-child {
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.relatedWordLevel {
+  font-size: 12px;
+  color: #666;
+  background: #f0f0f0;
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
+@media (prefers-color-scheme: dark) {
+  .relatedWordLevel {
+    color: #999;
+    background: #333;
+  }
+}
+
+/* CTA Section */
+.ctaSection {
+  position: sticky;
+  bottom: 0;
+  background: linear-gradient(to top, rgba(255,255,255,0.95), rgba(255,255,255,1));
+  padding: 20px 0;
+  margin-top: 40px;
+  border-top: 1px solid #eaeaea;
+  z-index: 10;
+}
+
+@media (prefers-color-scheme: dark) {
+  .ctaSection {
+    background: linear-gradient(to top, rgba(10,10,10,0.95), rgba(10,10,10,1));
+    border-top-color: #333;
+  }
+}
+
+.ctaCard {
+  background: #0070f3;
+  color: white;
+  padding: 32px;
+  border-radius: 16px;
+  text-align: center;
+}
+
+.ctaTitle {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0 0 12px 0;
+}
+
+.ctaDescription {
+  font-size: 16px;
+  margin: 0 0 24px 0;
+  opacity: 0.9;
+}
+
+.ctaButton {
+  display: inline-block;
+  background: white;
+  color: #0070f3;
+  padding: 16px 32px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.ctaButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 112, 243, 0.3);
+}
+
+.ctaNote {
+  font-size: 14px;
+  margin: 16px 0 0 0;
+  opacity: 0.8;
+}
+
+/* Footer */
+.footer {
+  padding: 20px 0;
+  border-top: 1px solid #eaeaea;
+  text-align: center;
+  font-size: 14px;
+  color: #666;
+}
+
+@media (prefers-color-scheme: dark) {
+  .footer {
+    border-top-color: #333;
+    color: #999;
+  }
+}
+
+.footerLink {
+  color: #0070f3;
+  text-decoration: none;
+  margin-left: 8px;
+}
+
+.footerLink:hover {
+  text-decoration: underline;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .container {
+    padding: 0 16px;
+  }
+  
+  .word {
+    font-size: 36px;
+  }
+  
+  .translatedWord {
+    font-size: 24px;
+  }
+  
+  .translationGrid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  }
+  
+  .relatedWordsGrid {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  }
+  
+  .ctaCard {
+    padding: 24px 16px;
+  }
+  
+  .ctaTitle {
+    font-size: 18px;
+  }
+}

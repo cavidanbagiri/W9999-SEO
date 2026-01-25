@@ -1,65 +1,258 @@
 import Image from "next/image";
 
+import {
+  IoLanguage,
+  IoSparkles,
+  IoBook,
+  IoAlbums,
+  IoChevronForward
+} from 'react-icons/io5';
+
+
+import { Sparkles } from 'lucide-react';
+
+
 export default function Home() {
+
+  
+  const features = [
+    {
+      icon: <IoLanguage className="text-3xl" />,
+      title: "9000+ Words Each",
+      description: "Comprehensive vocabulary lists for popular languages",
+      color: "from-blue-500 to-cyan-500",
+      delay: 100
+    },
+    {
+      icon: <IoSparkles className="text-3xl" />,
+      title: "AI Language Tutor",
+      description: "Get personalized explanations and practice with AI",
+      color: "from-purple-500 to-pink-500",
+      delay: 200
+    },
+    {
+      icon: <IoBook className="text-3xl" />,
+      title: "Smart Translations",
+      description: "Translate and organize words into custom categories",
+      color: "from-green-500 to-emerald-500",
+      delay: 300
+    },
+    {
+      icon: <IoAlbums className="text-3xl" />,
+      title: "Word Categories",
+      description: "Create and manage your personalized word collections",
+      color: "from-orange-500 to-red-500",
+      delay: 400
+    }
+  ];
+
+  const popularLanguages = [
+    { name: "English", learners: "46K", color: "bg-blue-100 text-blue-600", delay: 100 },
+    { name: "Spanish", learners: "23K", color: "bg-red-100 text-red-600", delay: 200 },
+    { name: "Russian", learners: "31K", color: "bg-yellow-100 text-yellow-600", delay: 300 },
+  ];
+
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.js file.
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 pb-20 overflow-hidden">
+      {/* Animated Background Elements */}
+      
+      <div className="fixed inset-0 -z-10 pointer-events-none">
+
+      
+        <div
+          className="absolute top-20 left-10 w-72 h-72 bg-purple-100 rounded-full blur-3xl opacity-20"
+          style={{ animation: 'float 8s ease-in-out infinite' }}
+        ></div>
+        <div
+          className="absolute bottom-40 right-10 w-96 h-96 bg-blue-100 rounded-full blur-3xl opacity-20"
+          style={{ animation: 'float 12s ease-in-out 2s infinite' }}
+        ></div>
+        <div
+          className="absolute top-1/2 left-1/2 w-64 h-64 bg-cyan-100 rounded-full blur-3xl opacity-15"
+          style={{ animation: 'float 10s ease-in-out 4s infinite' }}
+        ></div>
+      </div>
+
+      {/* Navigation */}
+      <nav
+        className="bg-white/80 backdrop-blur-md border-b border-gray-200 sticky top-0 z-40"
+        // style={fadeInStyle(100)}
+      >
+      </nav>
+
+      {/* Hero Section */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-2">
+        <div style={{fontFamily: 'IBM Plex Sans', fontWeight: 400}}
+        className="text-center">
+          
+          {/* Badge */}
+
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-100  text-blue-700 rounded-full text-sm font-medium mb-6">
+              <Sparkles size={16} />
+              <span>9,000+ Most Common Words • Completely Free</span>
+            </div>
+          
+
+          {/* Main Heading */}
+          <h1
+            // style={fadeUpStyle(300)}
+            className="text-5xl md:text-7xl font-bold text-gray-900 mb-6 font-sans leading-tight"
+          >
+            Master Languages
+            <span className="block bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+              With AI Power Vocabulary
+            </span>
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
+
+          
+
+          {/* CTA Buttons */}
+          <div
+            // style={fadeUpStyle(500)}
+            className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16"
+          >
             <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+              href="https://www.w9999.app/login-register"
+              className="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-8 py-4 rounded-2xl hover:shadow-xl transition-all font-semibold text-lg flex items-center space-x-2 font-sans hover:scale-105 active:scale-95"
             >
-              Templates
-            </a>{" "}
-            or the{" "}
+              <span>Start Learning</span>
+              <IoChevronForward className="text-lg group-hover:translate-x-1 transition-transform" />
+            </a>
             <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+              href="https://www.w9999.app/ai-chat" 
+              className="border-2 border-gray-300 text-gray-700 px-8 py-4 rounded-2xl hover:border-purple-300 hover:bg-purple-50 transition-all font-semibold text-lg flex items-center space-x-2 font-sans hover:scale-105 active:scale-95"
             >
-              Learning
-            </a>{" "}
-            center.
+              <IoSparkles className="text-purple-600" />
+              <span>Try AI Tutor</span>
+            </a>
+          </div>
+
+          
+        </div>
+      </section>
+
+      {/* Hero Section */}
+      <section className=" pb-6 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div className="text-center max-w-4xl mx-auto">
+          
+          {/* Stats */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-3xl mx-auto">
+            <div className="bg-white  backdrop-blur-sm rounded-2xl p-6 border border-gray-100 shadow">
+              <div className="text-3xl font-bold text-gray-900 ">9,000+</div>
+              <div className="text-gray-600 dark:text-gray-400">Essential Words</div>
+            </div>
+            <div className="bg-white  backdrop-blur-sm rounded-2xl p-6 border border-gray-100 shadow">
+              <div className="text-3xl font-bold text-gray-900 ">3</div>
+              <div className="text-gray-600 dark:text-gray-400">Languages</div>
+            </div>
+            <div className="bg-white  backdrop-blur-sm rounded-2xl p-6 border border-gray-100 shadow">
+              <div className="text-3xl font-bold text-gray-900 ">AI</div>
+              <div className="text-gray-600 dark:text-gray-400">Powered Tutor</div>
+            </div>
+            <div className="bg-white backdrop-blur-sm rounded-2xl p-6 border border-gray-100 shadow">
+              <div className="text-3xl font-bold text-gray-900 ">100%</div>
+              <div className="text-gray-600 dark:text-gray-400">Free Forever</div>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+
+      {/* Features Section */}
+      <section id="features" className="bg-white py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Section Header */}
+          <div
+            // style={fadeUpStyle(100)}
+            className="text-center mb-16"
+          >
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 font-sans">
+              Everything You Need to
+              <span className="block bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+                Succeed in Languages
+              </span>
+            </h2>
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto font-sans">
+              Powerful tools and features designed to make language learning effective and enjoyable
+            </p>
+          </div>
+
+          {/* Features Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {features.map((feature, index) => (
+              <div
+                key={index}
+                // style={fadeUpStyle(feature.delay)}
+                className="group flex flex-col items-center bg-white rounded-2xl p-8 border border-gray-200 hover:border-transparent hover:shadow-2xl transition-all duration-500 cursor-pointer hover:scale-105"
+              >
+                <div className={`w-16 h-16 bg-gradient-to-r ${feature.color} rounded-2xl flex items-center justify-center text-white mb-6 group-hover:scale-110 transition-transform duration-300`}>
+                  {feature.icon}
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-3 font-sans  w-full">{feature.title}</h3>
+                <p className="text-gray-600 leading-relaxed font-sans">{feature.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      
+
+      {/* CTA Section */}
+      <section className="bg-gradient-to-r from-purple-600 to-blue-600 py-20">
+        <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
+          <h2
+            // style={fadeUpStyle(100)}
+            className="text-4xl md:text-5xl font-bold text-white mb-6 font-sans"
+          >
+            Ready to Start Your Language Journey?
+          </h2>
+          <p
+            // style={fadeUpStyle(200)}
+            className="text-xl text-purple-100 mb-8 max-w-2xl mx-auto font-sans"
+          >
+            Join millions of learners and experience the future of language learning today
           </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+          <div
+            // style={fadeUpStyle(300)}
+            className="flex flex-col sm:flex-row gap-4 justify-center"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+            <a
+              href="https://www.w9999.app/login-register"
+              className="bg-white text-purple-600 px-8 py-4 rounded-2xl hover:shadow-xl transition-all font-semibold text-lg font-sans hover:scale-105 active:scale-95"
+            >
+              Create Free Account
+            </a>
+            <a
+              href="https://www.w9999.app/ai-chat"
+              className="border-2 border-white text-white px-8 py-4 rounded-2xl hover:bg-white hover:text-purple-600 transition-all font-semibold text-lg font-sans hover:scale-105 active:scale-95"
+            >
+              Try AI Tutor
+            </a>
+          </div>
         </div>
-      </main>
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-gray-900 text-white py-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <div className="flex items-center justify-center space-x-2 mb-6">
+              <span className="text-5xl font-bold font-sans">W9999</span>
+            </div>
+            <p className="text-gray-400 mb-8 max-w-md mx-auto font-sans">
+              The smartest way to learn languages with AI-powered tools and comprehensive word collections.
+            </p>
+            <div className="text-gray-400 text-sm font-sans">
+              © 2025 W9999. All rights reserved.
+            </div>
+          </div>
+        </div>
+      </footer>
+
     </div>
   );
 }
+

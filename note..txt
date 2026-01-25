@@ -1,0 +1,14 @@
+
+My app is about top 9000+ words in English, Russian, and Spanish.
+
+1 - Get Top 9000 words in English, Russian, and Spanish.
+2 - There Daily Streaks and Daily Progress.
+3 - AI Chat, AI Tutor, AI Explanations, AI Translations, AI Examples, AI Related Words.
+4 - Notes.
+5 - Dashboard.
+6 - Mobile friendly.
+7 - Realtime Chat with Real User.
+8 - Word Categories.
+9 - Word Part of Speech.
+
+All of this is Free.
