@@ -24,19 +24,21 @@ export async function generateMetadata({ params }) {
     };
   }
 
+  console.log('[SEO] data', data);
+
   return {
-    title: `${data.word} → ${data.translation} | w9999 – Learn ${data.source_language_name} to ${data.targetLangName}`,
-    description: `Learn "${data.word}" (${data.level}) in ${data.source_language_name}. Definition: ${data.meanings[0]?.definition || ''}. Translation: ${data.translation}. Example: ${data.examples?.[0] || ''}`,
+    title: `${data?.word} → ${data?.translation} | w9999 – Learn ${data?.source_language_name} to ${data?.targetLangName}`,
+    description: `Learn "${data?.word}" (${data?.level}) in ${data?.source_language_name}. Translation: ${data?.translation}.}`,
     alternates: {
       canonical: `https://w9999-seo.onrender.com/${locale}/${encodeURIComponent(decodedWord)}`,
-      languages: data.target_languages.reduce((acc, lang) => {
+      languages: data?.target_languages?.reduce((acc, lang) => {
         acc[`${langFrom}-${lang}`] = `https://w9999-seo.onrender.com/${langFrom}-${lang}/${encodeURIComponent(decodedWord)}`;
         return acc;
       }, {}),
     },
     openGraph: {
-      title: `${data.word} → ${data.translation}`,
-      description: `Learn "${data.word}" in ${data.targetLangName} with audio, examples and AI explanations.`,
+      title: `${data?.word} → ${data?.translation}`,
+      description: `Learn "${data?.word}" in ${data?.targetLangName} with audio, examples and AI explanations.`,
       url: `https://w9999-seo.onrender.com/${locale}/${encodeURIComponent(decodedWord)}`,
       siteName: 'w9999',
       images: [
@@ -52,8 +54,8 @@ export async function generateMetadata({ params }) {
     },
     twitter: {
       card: 'summary_large_image',
-      title: `${data.word} → ${data.translation}`,
-      description: `Learn "${data.word}" in ${data.targetLangName} with audio, examples and AI explanations.`,
+      title: `${data?.word} → ${data?.translation}`,
+      description: `Learn "${data?.word}" in ${data?.targetLangName} with audio, examples and AI explanations.`,
       images: [`https://api.w9999.app/og-image?word=${encodeURIComponent(decodedWord)}&from=${langFrom}&to=${langTo}`],
     },
   };

@@ -14,18 +14,18 @@ export default function WordPageContent({ data, locale, decodedWord }) {
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "LearningResource",
-    "name": `${data.word} - ${data.translation || 'Translation'}`,
-    "description": `Learn "${data.word}" in ${data.source_language_name}. Definition, pronunciation, examples, and translation to ${data.targetLangName}.`,
-    "educationalLevel": data.level ? `CEFR ${data.level}` : "Beginner",
+    "name": `${data?.word} - ${data?.translation || 'Translation'}`,
+    "description": `Learn "${data?.word}" in ${data?.source_language_name}. Definition, pronunciation, examples, and translation to ${data?.targetLangName}.`,
+    "educationalLevel": data?.level ? `CEFR ${data?.level}` : "Beginner",
     "learningResourceType": "Vocabulary",
     "inLanguage": langFrom,
-    "translations": data.translations.map(t => ({
+    "translations": data?.translations?.map(t => ({
       "@type": "Language",
-      "name": t.language_name,
-      "alternateName": t.language_code
+      "name": t?.language_name,
+      "alternateName": t?.language_code
     })),
-    "example": data.example_sentences.map(s => s.text).slice(0, 5),
-    "dateModified": data.last_updated,
+    "example": data?.example_sentences?.map(s => s?.text).slice(0, 5),
+    "dateModified": data?.last_updated,
     "provider": {
       "@type": "Organization",
       "name": "w9999",
@@ -35,27 +35,13 @@ export default function WordPageContent({ data, locale, decodedWord }) {
 
   return (
     <>
-      {/* <head> */}
-        {/* <title>{`${data.word} → ${data.translation} | w9999 - Learn ${data.source_language_name} to ${data.targetLangName}`}</title>
-        <meta name="description" content={`Learn "${data.word}" (${data.level}) in ${data.source_language_name}. Definition: ${data.meanings[0]?.definition || ''}. Translation: ${data.translation}. Example: ${data.examples?.[0] || ''}`} /> */}
-
-        {/* hreflang tags */}
-        {/* {data.target_languages.map(lang => (
-          <link
-            key={lang}
-            rel="alternate"
-            hrefLang={`${langFrom}-${lang}`}
-            href={`https://www.w9999.app/${langFrom}-${lang}/${encodeURIComponent(data.word)}`}
-          />
-        ))} */}
-
+      
         {/* JSON-LD */}
         <Script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
         />
-      {/* </head> */}
-
+      
       <main className="min-h-screen bg-gradient-to-br from-gray-50 to-white text-gray-900 transition-colors duration-200">
 
         {/* Background decorative elements */}
@@ -117,40 +103,40 @@ export default function WordPageContent({ data, locale, decodedWord }) {
                     <div className="flex items-center gap-3 mb-4">
                       <div className="flex items-center gap-2 px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm font-medium">
                         <Globe size={14} />
-                        <span>{data.source_language_name}</span>
+                        <span>{data?.source_language_name}</span>
                       </div>
-                      {data.level && (
+                      {data?.level && (
                         <div className="px-3 py-1 bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800 rounded-full text-sm font-semibold border border-blue-200">
-                          CEFR {data.level}
+                          CEFR {data?.level}
                         </div>
                       )}
                     </div>
                     
                     <h1 className="text-6xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
-                      {data.word}
+                      {data?.word}
                     </h1>
 
                     <div className="flex flex-wrap items-center gap-4 mb-6">
-                      {data.ipa_pronunciation && (
+                      {data?.ipa_pronunciation && (
                         <div className="flex items-center gap-3 bg-white/80 backdrop-blur-sm px-4 py-3 rounded-xl border border-gray-200">
                           <span className="text-xl text-gray-700 font-serif">
-                            /{data.ipa_pronunciation}/
+                            /{data?.ipa_pronunciation}/
                           </span>
                           <div className="w-px h-6 bg-gray-200"></div>
                           <AudioPlayer
-                            url={data.audioUrl}
-                            label={`Pronounce ${data.word}`}
+                            text={data?.word}
+                            language={data?.source_language_name}
                             size="md"
                             variant="minimal"
                           />
                         </div>
                       )}
                       
-                      {data.frequency_rank && (
+                      {data?.frequency_rank && (
                         <div className="flex items-center gap-2 px-4 py-2 bg-gray-50 rounded-lg">
                           <Target size={16} className="text-gray-600" />
                           <span className="text-sm text-gray-700">
-                            <span className="font-semibold">Rank #{data.frequency_rank}</span> in frequency
+                            <span className="font-semibold">Rank #{data?.frequency_rank}</span> in frequency
                           </span>
                         </div>
                       )}
@@ -162,12 +148,11 @@ export default function WordPageContent({ data, locale, decodedWord }) {
                     <h3 className="text-lg font-semibold text-gray-800 mb-4">Quick Actions</h3>
                     <div className="space-y-4">
                       <AudioPlayer
-                        url={data.audioUrl}
-                        label={`Play ${data.word} pronunciation`}
-                        size="lg"
-                        variant="primary"
-                        className="w-full"
-                      />
+                            text={data?.word}
+                            language={data?.source_language_name}
+                            size="md"
+                            variant="minimal"
+                          />
                       <button className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-blue-50 to-indigo-50 text-blue-700 rounded-xl hover:from-blue-100 hover:to-indigo-100 transition-all duration-200 border border-blue-200">
                         <Star size={18} />
                         <span className="font-semibold">Save to Flashcards</span>
@@ -181,40 +166,40 @@ export default function WordPageContent({ data, locale, decodedWord }) {
             {/* Translation Cards Grid */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
               {/* Primary Translation */}
-              {data.translation && (
+              {data?.translation && (
                 <div className="lg:col-span-2">
                   <div className="bg-gradient-to-br from-blue-600 to-indigo-600 rounded-3xl p-8 shadow-2xl">
                     <div className="flex items-center justify-between mb-6">
                       <div>
                         <div className="flex items-center gap-2 mb-3">
                           <div className="bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full text-sm text-white">
-                            {data.targetLangName}
+                            {data?.targetLangName}
                           </div>
                           <ChevronRight size={20} className="text-white/60" />
                         </div>
-                        <p className="text-5xl font-bold text-white mb-2">{data.translation}</p>
+                        <p className="text-5xl font-bold text-white mb-2">{data?.translation}</p>
                         <p className="text-white/80">Primary translation</p>
                       </div>
                       <AudioPlayer
-                        url={data.audioUrl}
-                        label={`Play ${data.translation} pronunciation`}
-                        size="lg"
-                        variant="light"
-                      />
+                            text={data?.translation}
+                            language={data?.targetLangName}
+                            size="md"
+                            variant="minimal"
+                          />
                     </div>
                   </div>
                 </div>
               )}
 
               {/* All Translations Summary */}
-              {data.translations.length > 0 && (
+              {data?.translations?.length > 0 && (
                 <div className="bg-white rounded-3xl p-8 border border-gray-200 shadow-lg">
                   <h3 className="text-xl font-semibold text-gray-800 mb-6 flex items-center gap-2">
                     <Globe size={20} className="text-blue-600" />
-                    <span>Also in {data.translations.length} languages</span>
+                    <span>Also in {data?.translations.length} languages</span>
                   </h3>
                   <div className="space-y-4">
-                    {data.translations.slice(0, 3).map((trans, index) => (
+                    {data?.translations?.slice(0, 3)?.map((trans, index) => (
                       <div
                         key={index}
                         className="flex items-center justify-between p-4 rounded-xl hover:bg-gray-50 transition-colors border border-gray-100"
@@ -222,24 +207,24 @@ export default function WordPageContent({ data, locale, decodedWord }) {
                         <div>
                           <div className="flex items-center gap-2 mb-1">
                             <span className="text-sm font-semibold text-gray-600 uppercase">
-                              {trans.language_code}
+                              {trans?.language_code}
                             </span>
                             <span className="text-xs text-gray-500">•</span>
-                            <span className="text-sm text-gray-500">{trans.language_name}</span>
+                            <span className="text-sm text-gray-500">{trans?.language_name}</span>
                           </div>
-                          <p className="text-lg font-medium text-gray-900">{trans.translated_text}</p>
+                          <p className="text-lg font-medium text-gray-900">{trans?.translated_text}</p>
                         </div>
                         <AudioPlayer
-                          url={data.audio_urls[trans.language_code]}
-                          label={`Play ${trans.translated_text} in ${trans.language_name}`}
-                          size="sm"
-                          variant="ghost"
-                        />
+                            text={trans?.translated_text}
+                            language={trans?.language_code}
+                            size="md"
+                            variant="minimal"
+                          />
                       </div>
                     ))}
-                    {data.translations.length > 3 && (
+                    {data?.translations?.length > 3 && (
                       <button className="w-full text-center text-blue-600 hover:text-blue-700 font-medium py-2 rounded-lg hover:bg-blue-50 transition-colors">
-                        + {data.translations.length - 3} more translations
+                        + {data?.translations?.length - 3} more translations
                       </button>
                     )}
                   </div>
@@ -250,7 +235,7 @@ export default function WordPageContent({ data, locale, decodedWord }) {
             {/* Meanings & Examples Section */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
               {/* Meanings & Definitions */}
-              {data.meanings.length > 0 && (
+              {data?.meanings?.length > 0 && (
                 <section>
                   <div className="sticky top-8">
                     <div className="flex items-center gap-3 mb-6">
@@ -260,7 +245,7 @@ export default function WordPageContent({ data, locale, decodedWord }) {
                       <h2 className="text-2xl font-bold text-gray-800">Meanings & Definitions</h2>
                     </div>
                     <div className="space-y-4">
-                      {data.meanings.map((meaning, index) => (
+                      {data?.meanings?.map((meaning, index) => (
                         <div
                           key={index}
                           className="group bg-white rounded-2xl p-6 border border-gray-200 shadow-sm hover:shadow-md hover:border-blue-200 transition-all duration-300"
@@ -270,12 +255,12 @@ export default function WordPageContent({ data, locale, decodedWord }) {
                               <span className="text-blue-700 font-bold">{index + 1}</span>
                             </div>
                             <div className="flex-1">
-                              {meaning.pos && (
+                              {meaning?.pos && (
                                 <span className="inline-block bg-blue-50 text-blue-700 px-3 py-1 rounded-lg text-sm font-semibold mb-3">
-                                  {meaning.pos}
+                                  {meaning?.pos}
                                 </span>
                               )}
-                              <p className="text-gray-700 leading-relaxed">{meaning.definition}</p>
+                              <p className="text-gray-700 leading-relaxed">{meaning?.definition}</p>
                             </div>
                           </div>
                         </div>
@@ -286,7 +271,7 @@ export default function WordPageContent({ data, locale, decodedWord }) {
               )}
 
               {/* Example Sentences */}
-              {data.example_sentences.length > 0 && (
+              {data?.example_sentences?.length > 0 && (
                 <section>
                   <div className="flex items-center gap-3 mb-6">
                     <div className="p-2 bg-purple-100 rounded-lg">
@@ -295,7 +280,7 @@ export default function WordPageContent({ data, locale, decodedWord }) {
                     <h2 className="text-2xl font-bold text-gray-800">Example Sentences</h2>
                   </div>
                   <div className="space-y-6">
-                    {data.example_sentences.slice(0, 5).map((sentence, index) => (
+                    {data?.example_sentences.slice(0, 5).map((sentence, index) => (
                       <div
                         key={index}
                         className="group bg-gradient-to-br from-white to-gray-50 rounded-2xl p-6 border border-gray-200 shadow-sm hover:shadow-lg hover:border-purple-200 transition-all duration-300"
@@ -305,12 +290,12 @@ export default function WordPageContent({ data, locale, decodedWord }) {
                             <span className="text-purple-700 font-bold text-sm">{index + 1}</span>
                           </div>
                           <p className="text-lg italic text-gray-800 leading-relaxed">
-                            "{sentence.text}"
+                            "{sentence?.text}"
                           </p>
                         </div>
-                        {sentence.translation && (
+                        {sentence?.translation && (
                           <div className="ml-12 pl-4 border-l-2 border-purple-200">
-                            <p className="text-gray-600">{sentence.translation}</p>
+                            <p className="text-gray-600">{sentence?.translation}</p>
                           </div>
                         )}
                       </div>
@@ -323,21 +308,21 @@ export default function WordPageContent({ data, locale, decodedWord }) {
             {/* Categories & Related Words */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
               {/* Categories */}
-              {data.categories.length > 0 && (
+              {data?.categories?.length > 0 && (
                 <section>
                   <h3 className="text-xl font-semibold text-gray-800 mb-6">Categories</h3>
                   <div className="flex flex-wrap gap-3">
-                    {data.categories.map((cat, index) => (
+                    {data?.categories?.map((cat, index) => (
                       <div
                         key={index}
                         className="group relative"
                       >
                         <span className="inline-flex items-center gap-2 px-4 py-3 bg-gradient-to-br from-gray-50 to-white text-gray-800 rounded-xl text-sm font-medium hover:from-gray-100 hover:to-gray-50 transition-all duration-200 border border-gray-200 hover:border-gray-300 shadow-sm hover:shadow">
-                          {cat.name}
+                          {cat?.name}
                         </span>
-                        {cat.description && (
+                        {cat?.description && (
                           <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-sm rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 whitespace-nowrap z-10">
-                            {cat.description}
+                            {cat?.description}
                             <div className="absolute top-full left-1/2 transform -translate-x-1/2 -translate-y-1/2 rotate-45 w-2 h-2 bg-gray-900"></div>
                           </div>
                         )}
@@ -348,11 +333,11 @@ export default function WordPageContent({ data, locale, decodedWord }) {
               )}
 
               {/* Related Words */}
-              {data.related_words.length > 0 && (
+              {data?.related_words?.length > 0 && (
                 <section>
                   <h3 className="text-xl font-semibold text-gray-800 mb-6">Related Words</h3>
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                    {data.related_words.map((word, index) => (
+                    {data?.related_words?.map((word, index) => (
                       <a
                         key={index}
                         href={`/${langFrom}-${langTo}/${encodeURIComponent(word.text)}`}
@@ -360,17 +345,17 @@ export default function WordPageContent({ data, locale, decodedWord }) {
                       >
                         <div className="flex flex-col items-center text-center">
                           <span className="text-lg font-semibold group-hover:text-blue-600 transition-colors text-gray-900">
-                            {word.text}
+                            {word?.text}
                           </span>
                           <div className="flex items-center gap-2 mt-2">
-                            {word.level && (
+                            {word?.level && (
                               <span className="px-2 py-1 bg-blue-50 text-blue-700 text-xs rounded-full font-medium">
-                                {word.level}
+                                {word?.level}
                               </span>
                             )}
-                            {word.frequency_rank && (
+                            {word?.frequency_rank && (
                               <span className="text-xs text-gray-500">
-                                #{word.frequency_rank}
+                                #{word?.frequency_rank}
                               </span>
                             )}
                           </div>
