@@ -24,7 +24,6 @@ export async function generateMetadata({ params }) {
     };
   }
 
-  console.log('[SEO] data', data);
 
   return {
     title: `${data?.word} → ${data?.translation} | w9999 – Learn ${data?.source_language_name} to ${data?.targetLangName}`,

@@ -261,7 +261,6 @@ export default function AudioPlayer({
   };
 
 
-  console.log('the text and language name us ', text, ' -> ',language)
   // Don't render if no text or language
   if (!text || !language) {
     console.warn('AudioPlayer: text or language prop is missing');
