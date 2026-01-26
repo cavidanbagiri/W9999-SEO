@@ -153,10 +153,11 @@ export default function WordPageContent({ data, locale, decodedWord }) {
                             size="md"
                             variant="minimal"
                           />
-                      <button className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-blue-50 to-indigo-50 text-blue-700 rounded-xl hover:from-blue-100 hover:to-indigo-100 transition-all duration-200 border border-blue-200">
+                      <a href='https://w9999.app'
+                      className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-blue-50 to-indigo-50 text-blue-700 rounded-xl hover:from-blue-100 hover:to-indigo-100 transition-all duration-200 border border-blue-200">
                         <Star size={18} />
                         <span className="font-semibold">Save to Flashcards</span>
-                      </button>
+                      </a>
                     </div>
                   </div>
                 </div>
