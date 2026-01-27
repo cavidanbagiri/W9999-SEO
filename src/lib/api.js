@@ -3,7 +3,7 @@
 import axios from 'axios';
 
 // const BASE = process.env.NEXT_PUBLIC_API_URL || 'https://duolingopocketserver.onrender.com';
-const BASE = 'https://api.w9999.app/api';
+const BASE = 'https://api.w9999.app';
 
 export async function getWord(langFrom, langTo, word) {
   const { data } = await axios.get(
