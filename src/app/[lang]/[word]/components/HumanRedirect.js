@@ -3,7 +3,7 @@
 
 import { useEffect } from 'react';
 
-export default function HumanRedirect({ word, langFrom, langTo }) {
+export default function HumanRedirect({ word, langFrom}) {
   useEffect(() => {
     // Bot-safe human detection and redirect
     const isBot = /bot|crawl|spider|slurp|teoma|archive|track|screenshot|monitoring|prerender/i.test(
@@ -17,8 +17,7 @@ export default function HumanRedirect({ word, langFrom, langTo }) {
         if (!redirectTriggered) {
           redirectTriggered = true;
           window.open(
-            `https://app.w9999.app/card-detail?word=${encodeURIComponent(word)}&langFrom=${langFrom}&langTo=${langTo}`,
-            '_blank'
+            `https://app.w9999.app`,
           );
         }
       };
@@ -37,7 +36,7 @@ export default function HumanRedirect({ word, langFrom, langTo }) {
 
       return () => clearTimeout(timer);
     }
-  }, [word, langFrom, langTo]);
+  }, [word, langFrom]);
 
   return null; // This component doesn't render anything
 }

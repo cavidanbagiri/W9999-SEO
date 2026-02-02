@@ -1,14 +1,483 @@
 
-My app is about top 9000+ words in English, Russian, and Spanish.
 
-1 - Get Top 9000 words in English, Russian, and Spanish.
-2 - There Daily Streaks and Daily Progress.
-3 - AI Chat, AI Tutor, AI Explanations, AI Translations, AI Examples, AI Related Words.
-4 - Notes.
-5 - Dashboard.
-6 - Mobile friendly.
-7 - Realtime Chat with Real User.
-8 - Word Categories.
-9 - Word Part of Speech.
 
-All of this is Free.
+
+
+
+
+        
+// First best page.js
+import { getTopWords } from '@/lib/api';
+import Link from 'next/link';
+
+export async function generateStaticParams() {
+  return [
+    { size: '100' },
+    { size: '500' },
+    { size: '1000' },
+    { size: '10000' },
+  ];
+}
+
+
+// === SEO METADATA ===
+export async function generateMetadata({ params }) {
+  const { size } = await params;
+  const sizeNum = parseInt(size);
+  const baseUrl = 'https://www.w9999.tech';
+  const canonicalUrl = `${baseUrl}/top/english-words/${size}`;
+
+  const titles = {
+    100: 'Top 100 English Words | Most Common Vocabulary (2024)',
+    500: 'Top 500 English Words | Essential Vocabulary List',
+    1000: 'Top 1000 English Words | 75% of Everyday English',
+    10000: 'Top 10000 English Words | Complete Frequency Dictionary',
+  };
+
+  const descriptions = {
+    100: 'Learn the 100 most common English words. Free list with audio, translations (Spanish/Russian/Turkish), and AI explanations. Perfect for A1 beginners.',
+    500: 'Master 500 most frequent English words. Free vocabulary with pronunciation, flashcards, and contextual examples. CEFR A1-A2.',
+    1000: 'The 1000 most common English words cover 75% of everyday English. Free list with translations, audio, and frequency ranking.',
+    10000: 'Complete frequency dictionary: 10,000 most common English words ranked by usage. Advanced vocabulary with CEFR levels and examples.',
+  };
+
+  const keywordsBySize = {
+    100: 'top 100 english words, 100 most common words in english, learn 100 essential english words, english vocabulary for beginners A1',
+    500: 'top 500 english words, 500 most used english words, intermediate english vocabulary, CEFR A1-A2 words',
+    1000: '1000 most common english words, cover 75% english, everyday english vocabulary, english word frequency list',
+    10000: '10000 english words dictionary, complete english vocabulary, advanced english words, english word frequency ranking',
+  };
+
+  return {
+    metadataBase: new URL(baseUrl),  // ✅ Set once
+    title: titles[sizeNum] || `Top ${size} English Words`,
+    description: descriptions[sizeNum],
+    keywords: keywordsBySize[sizeNum],
+    alternates: {
+      canonical: canonicalUrl,
+      languages: {
+        'es': `${baseUrl}/top/spanish-words/${size}`,
+        'ru': `${baseUrl}/top/russian-words/${size}`,
+      },
+    },
+    openGraph: {
+      title: titles[sizeNum],
+      description: descriptions[sizeNum],
+      url: canonicalUrl,
+      type: 'website',
+      siteName: 'w9999',
+      images: [
+        {
+          url: '/logo.png',
+          width: 1200,
+          height: 630,
+          alt: `Top ${size} English Words`,
+        },
+      ],
+    },
+    metadataBase: new URL(baseUrl),
+    robots: {
+      index: true,
+      follow: true,
+      'max-snippet': -1,
+      'max-image-preview': 'large',
+      'max-video-preview': -1,
+    },
+  };
+}
+
+
+
+// Features data
+const features = [
+  {
+    icon: '📚',
+    title: 'Curated Word Lists',
+    description: 'Hand-picked vocabulary ranked by frequency and relevance',
+    color: 'from-blue-500 to-cyan-500',
+  },
+  {
+    icon: '🎯',
+    title: 'Smart Learning',
+    description: 'AI-powered explanations and contextual examples for each word',
+    color: 'from-purple-500 to-pink-500',
+  },
+  {
+    icon: '💾',
+    title: 'Track Progress',
+    description: 'Save learned words and monitor your vocabulary growth',
+    color: 'from-orange-500 to-red-500',
+  },
+  {
+    icon: '🎓',
+    title: 'Multiple Languages',
+    description: 'Learn English, Spanish, Russian and more in one place',
+    color: 'from-green-500 to-emerald-500',
+  },
+];
+
+
+export default async function TopEnglishWordsPage({ params }) {
+
+  const { size } = await params;
+  const words = await getTopWords('en', parseInt(size));
+
+  // At top level (outside map, before schema script)
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": `What are the top ${size} English words?`,
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": `These are the ${size} most frequently used English words ranked by usage frequency. They cover essential vocabulary for CEFR levels A1-C2.`
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How much of English do the top 1000 words cover?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The top 1000 most common English words cover approximately 75-80% of everyday English conversations and written texts."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I download this word list?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, you can access the full list here and export it through our free web app at w9999.app"
+        }
+      }
+    ]
+  };
+
+  // === SCHEMA.ORG JSON-LD (COMPLETE) ===
+  const generateSchema = (size, words) => {
+    const baseUrl = 'https://www.w9999.tech';
+
+    return {
+      "@context": "https://schema.org",
+      "@graph": [
+        // 1. Main Collection Page
+        {
+          "@type": "CollectionPage",
+          "@id": `${baseUrl}/top/english-words/${size}#webpage`,
+          "url": `${baseUrl}/top/english-words/${size}`,
+          "name": `Top ${size} English Words`,
+          "description": `The ${size} most common English vocabulary words with frequency ranking`,
+          "inLanguage": "en",
+          "isPartOf": { "@id": `${baseUrl}#website` },
+          "breadcrumb": { "@id": `${baseUrl}/top/english-words/${size}#breadcrumb` },
+        },
+
+        // 2. Breadcrumb
+        {
+          "@type": "BreadcrumbList",
+          "@id": `${baseUrl}/top/english-words/${size}#breadcrumb`,
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": baseUrl,
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Top Words",
+              "item": `${baseUrl}/top`,
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": `Top ${size} English Words`,
+              "item": `${baseUrl}/top/english-words/${size}`,
+            },
+          ],
+        },
+
+        // 3. Learning Resource (with hasPart)
+        {
+          "@type": "LearningResource",
+          "@id": `${baseUrl}/top/english-words/${size}#resource`,
+          "name": `Top ${size} English Words`,
+          "description": `Free vocabulary list: ${size} most frequent English words ranked by usage`,
+          "educationalLevel": ["A1", "A2", "B1", "B2", "C1", "C2"],
+          "inLanguage": "en",
+          "learningResourceType": "Vocabulary List",
+          "provider": {
+            "@type": "Organization",
+            "@id": `${baseUrl}#organization`,
+            "name": "w9999",
+            "url": baseUrl,
+          },
+          "hasPart": words.slice(0, 50).map(w => ({ // Top 50 for schema
+            "@type": "Thing",
+            "name": w.text,
+            "url": `${baseUrl}/en/${w.text}`,
+          })),
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD",
+          },
+        },
+
+        // 4. Organization
+        {
+          "@type": "Organization",
+          "@id": `${baseUrl}#organization`,
+          "name": "w9999",
+          "url": baseUrl,
+          "logo": `${baseUrl}/logo.png`,
+          "sameAs": [
+            "https://twitter.com/w9999",
+            "https://facebook.com/w9999",
+          ],
+        },
+
+        // 5. WebSite
+        {
+          "@type": "WebSite",
+          "@id": `${baseUrl}#website`,
+          "url": baseUrl,
+          "name": "w9999 - Learn Languages",
+          "inLanguage": "en",
+          "potentialAction": {
+            "@type": "SearchAction",
+            "target": {
+              "@type": "EntryPoint",
+              "urlTemplate": `${baseUrl}/search?q={search_term}`,
+            },
+            "query-input": "required name=search_term",
+          },
+        },
+        // ItemList for word cards
+        {
+          "@type": "ItemList",
+          "@id": `${baseUrl}/top/english-words/${size}#wordlist`,
+          "itemListElement": words.slice(0, 100).map((w, idx) => ({
+            "@type": "ListItem",
+            "position": idx + 1,
+            "name": w.text,
+            "url": `${baseUrl}/en/${w.text}`,
+            "description": `Rank #${idx + 1} - CEFR ${w.level || 'N/A'}`,
+            // ✅ ADD:
+            "item": {
+              "@type": "Thing",
+              "name": w.text,
+            }
+          })),
+        },
+      ],
+    };
+  };
+
+
+
+
+  return (
+    <main className="min-h-screen bg-gray-50">
+      {/* === HERO SECTION === */}
+
+
+      <div className=" bg-gradient-to-r from-blue-600 to-indigo-600 text-white">
+        <div className="max-w-6xl mx-auto px-4 py-12 md:py-16">
+          <h1 className="text-4xl md:text-5xl font-bold mb-4">
+            Top {size} English Words
+          </h1>
+          {/* ADD: Subheading with keywords */}
+          <p className="text-sm md:text-base opacity-80 mb-2">
+            Most common English vocabulary ranked by frequency
+          </p>
+
+          <p className="text-lg md:text-xl opacity-95 mb-8 max-w-2xl">
+            Master essential English vocabulary with interactive flashcards, audio pronunciation, and AI explanations. Free learning resource for all CEFR levels.
+          </p>
+          <a
+            href="https://www.w9999.app"
+            className="inline-block px-8 py-3 bg-white text-blue-600 font-bold rounded-lg hover:shadow-lg transition-shadow duration-200"
+          >
+            Open Full App (Free) →
+          </a>
+        </div>
+      </div>
+
+
+      {/* === FEATURES GRID === */}
+      <div className="max-w-6xl mx-auto px-4 py-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {features.map((feature, index) => (
+            <div
+              key={index}
+              className="group flex flex-col items-center bg-white rounded-2xl p-8 border border-gray-200 hover:border-transparent hover:shadow-2xl transition-all duration-500 cursor-pointer hover:scale-105"
+            >
+              <div
+                className={`w-16 h-16 bg-gradient-to-r ${feature.color} rounded-2xl flex items-center justify-center text-white text-2xl mb-6 group-hover:scale-110 transition-transform duration-300`}
+              >
+                {feature.icon}
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-3 font-sans w-full text-center">
+                {feature.title}
+              </h3>
+              <p className="text-gray-600 leading-relaxed font-sans text-center text-sm">
+                {feature.description}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* === CONTROLS SECTION === */}
+      <div className="bg-white border-b border-gray-200">
+        <div className="max-w-6xl mx-auto px-4 py-8">
+
+          <nav className="max-w-6xl mx-auto px-4 mb-12">
+            <h2 className="text-lg font-bold text-gray-900 mb-4">Related Lists:</h2>
+            <ul className="flex flex-wrap gap-3">
+              {[100, 500, 1000, 10000].map(n => (
+                n !== parseInt(size) && (
+                  <li key={n}>
+                    <Link
+                      href={`/top/english-words/${n}`}
+                      className="text-blue-600 hover:underline font-semibold"
+                    >
+                      Top {n.toLocaleString()}
+                    </Link>
+                  </li>
+                )
+              ))}
+            </ul>
+          </nav>
+
+
+          {/* Language Switcher */}
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-3">
+              Language:
+            </label>
+            <div className="flex flex-wrap gap-2">
+              <Link
+                href={`/top/english-words/${size}`}
+                className={`px-4 py-2 rounded-lg font-semibold transition-all duration-200 ${true
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+              >
+                English
+              </Link>
+              <Link
+                href={`/top/spanish-words/${size}`}
+                className="px-4 py-2 rounded-lg font-semibold bg-gray-100 text-gray-700 hover:bg-gray-200 transition-all duration-200"
+              >
+                Spanish
+              </Link>
+              <Link
+                href={`/top/russian-words/${size}`}
+                className="px-4 py-2 rounded-lg font-semibold bg-gray-100 text-gray-700 hover:bg-gray-200 transition-all duration-200"
+              >
+                Russian
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* === WORD COUNT INFO === */}
+      <div className="bg-white">
+        <div className="max-w-6xl mx-auto px-4 py-4 border-b border-gray-200">
+          <p className="text-gray-700">
+            Showing <strong className="text-gray-900">{words.length.toLocaleString()}</strong> words
+          </p>
+        </div>
+      </div>
+
+
+      <section className="max-w-6xl mx-auto px-4 py-12">
+        <h2 className="text-2xl font-bold text-gray-900 mb-8">
+          Complete Word List ({words.length.toLocaleString()} words)
+        </h2>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {words.map((w, idx) => (
+            <Link
+              key={w.id}
+              href={`/en/${w.text}`}
+              className="flex flex-col p-4 bg-white border border-gray-200 rounded-xl hover:border-blue-500 hover:shadow-lg transition-all duration-300"
+            >
+              {/* Rank badge */}
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-xs font-semibold text-gray-500 uppercase">
+                  Rank #{idx + 1}
+                </span>
+                {w.frequency && (
+                  <span className="text-xs text-gray-400">
+                    {(w.frequency * 100).toFixed(2)}% freq
+                  </span>
+                )}
+              </div>
+
+              {/* Word title */}
+              <h3 className="text-lg md:text-xl font-bold text-blue-600 mb-2 hover:underline">
+                {w.text}
+              </h3>
+
+              {/* Level & Extra info */}
+              <div className="flex gap-2 flex-wrap mt-auto">
+                {w.level && (
+                  <span className="inline-block px-3 py-1 bg-blue-50 text-blue-700 text-xs font-semibold rounded-lg">
+                    {w.level}
+                  </span>
+                )}
+                {w.pos && (
+                  <span className="inline-block px-3 py-1 bg-gray-100 text-gray-600 text-xs font-semibold rounded-lg">
+                    {w.pos}
+                  </span>
+                )}
+              </div>
+            </Link>
+          ))}
+
+        </div>
+      </section>
+
+
+      {/* === BOTTOM CTA === */}
+      <div className="bg-gray-100 mt-12">
+        <div className="max-w-3xl mx-auto px-4 py-16 text-center">
+          <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
+            Want to Track Your Progress?
+          </h3>
+          <p className="text-gray-600 text-lg mb-8">
+            Save learned words, create flashcards, get AI explanations
+          </p>
+          <a
+            href="https://www.w9999.app"
+            className="inline-block px-8 py-3 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition-colors duration-200"
+          >
+            Start Learning Free →
+          </a>
+        </div>
+      </div>
+      {/* === SCHEMA.ORG JSON-LD === */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(generateSchema(parseInt(size), words))
+        }}
+      />
+      {size === '1000' && words.length > 0 && (
+        <script
+          key="faq-schema"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(faqSchema)
+          }}
+        />
+      )}
+    </main>
+  );
+}
