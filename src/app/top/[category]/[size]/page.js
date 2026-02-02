@@ -40,11 +40,31 @@ export async function generateStaticParams() {
   ];
 
   const sizes = ['100', '300', '500', '1000', '2000', '3000', '5000', '10000'];
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
-  return categories.flatMap(category =>
-    sizes.map(size => ({ category, size }))
-  );
+  const params = [];
+
+  for (const category of categories) {
+    for (const size of sizes) {
+      try {
+        // ✅ Verify data exists before generating page
+        const response = await fetch(
+          `${baseUrl}/api/top-words/${category}/${size}`,
+          { cache: 'force-cache' }
+        );
+
+        if (response.ok) {
+          params.push({ category, size });
+        }
+      } catch (error) {
+        console.warn(`⚠️ Skipping ${category}/${size} - API unavailable`);
+      }
+    }
+  }
+
+  return params;
 }
+
 
 // ============================================
 // SEO METADATA (CRITICAL FOR RANKING)

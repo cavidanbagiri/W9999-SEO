@@ -14,11 +14,23 @@ const nextConfig = {
   // ✅ SEO optimization
   compress: true,
   poweredByHeader: false,
-  
-  // ✅ Image optimization
+
+  // // ✅ Image optimization
+  // images: {
+  //   domains: ['www.YOUR-DOMAIN.com'],
+  //   formats: ['image/avif', 'image/webp'],
+  // },
   images: {
-    domains: ['www.YOUR-DOMAIN.com'],
-    formats: ['image/avif', 'image/webp'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'www.w9999.tech',
+      },
+      {
+        protocol: 'https',
+        hostname: '**.cdn.w9999.tech', // wildcard
+      },
+    ],
   },
 
   // ✅ Security headers
