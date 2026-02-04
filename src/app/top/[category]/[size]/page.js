@@ -32,6 +32,41 @@ export function parseCategorySlug(slug) {
 // STATIC GENERATION
 // ============================================
 
+// export async function generateStaticParams() {
+//   const categories = [
+//     'english-words', 'english-verbs', 'english-nouns', 'english-adjectives',
+//     'russian-words', 'russian-verbs', 'russian-nouns', 'russian-adjectives',
+//     'spanish-words', 'spanish-verbs', 'spanish-nouns', 'spanish-adjectives',
+//   ];
+
+//   const sizes = ['100', '300', '500', '1000', '2000', '3000', '5000', '10000'];
+//   const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+
+//   const params = [];
+
+//   for (const category of categories) {
+//     for (const size of sizes) {
+//       try {
+//         // ✅ Verify data exists before generating page
+//         const response = await fetch(
+//           `${baseUrl}/api/top-words/${category}/${size}`,
+//           { cache: 'force-cache' }
+//         );
+
+//         if (response.ok) {
+//           params.push({ category, size });
+//         }
+//       } catch (error) {
+//         console.warn(`⚠️ Skipping ${category}/${size} - API unavailable`);
+//       }
+//     }
+//   }
+
+//   return params;
+// }
+
+export const dynamic = "force-static";
+
 export async function generateStaticParams() {
   const categories = [
     'english-words', 'english-verbs', 'english-nouns', 'english-adjectives',
@@ -40,29 +75,10 @@ export async function generateStaticParams() {
   ];
 
   const sizes = ['100', '300', '500', '1000', '2000', '3000', '5000', '10000'];
-  const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
-  const params = [];
-
-  for (const category of categories) {
-    for (const size of sizes) {
-      try {
-        // ✅ Verify data exists before generating page
-        const response = await fetch(
-          `${baseUrl}/api/top-words/${category}/${size}`,
-          { cache: 'force-cache' }
-        );
-
-        if (response.ok) {
-          params.push({ category, size });
-        }
-      } catch (error) {
-        console.warn(`⚠️ Skipping ${category}/${size} - API unavailable`);
-      }
-    }
-  }
-
-  return params;
+  return categories.flatMap(category =>
+    sizes.map(size => ({ category, size }))
+  );
 }
 
 
@@ -458,7 +474,8 @@ export default async function TopWordsDynamicPage({ params }) {
             {relatedSizes.map(s => (
               <Link
                 key={s}
-                href={`${process.env.NEXT_PUBLIC_SEO_DOMAIN}/top/${category}/${s}`}
+                // href={`${process.env.NEXT_PUBLIC_SEO_DOMAIN}/top/${category}/${s}`}
+                href={`/top/${category}/${s}`}
                 className="px-4 py-2 rounded-lg font-semibold bg-gray-100 text-gray-700 hover:bg-blue-600 hover:text-white transition-all"
               >
                 Top {s.toLocaleString()}
@@ -478,7 +495,8 @@ export default async function TopWordsDynamicPage({ params }) {
               return (
                 <Link
                   key={lang}
-                  href={`${process.env.NEXT_PUBLIC_SEO_DOMAIN}/top/${newCategory}/${size}`}
+                  // href={`${process.env.NEXT_PUBLIC_SEO_DOMAIN}/top/${newCategory}/${size}`}
+                  href={`/top/${newCategory}/${size}`}
                   className={`px-4 py-2 rounded-lg font-semibold transition-all ${
                     category.startsWith(lang)
                       ? 'bg-blue-600 text-white'

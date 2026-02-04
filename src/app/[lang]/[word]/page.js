@@ -3,7 +3,10 @@
 import { getAllWordSlugs, getRichWord } from '@/lib/api';
 import WordPageContent from './components/WordPageContent';
 
+import { notFound } from 'next/navigation';
+
 const BASE_URL = process.env.NEXT_PUBLIC_SEO_DOMAIN;
+
 const LANG_URLS = {
   'en': `${BASE_URL}/en/words`,
   'es': `${BASE_URL}/es/words`,
@@ -24,7 +27,9 @@ function getTargetLanguage(lang) {
 export async function generateMetadata({ params }) {
   const { lang, word } = await params;
   const decodedWord = decodeURIComponent(word);
-  const targetLang = getTargetLanguage(lang);
+
+  const baseUrl = process.env.NEXT_PUBLIC_SEO_DOMAIN;
+  const pageUrl = `${baseUrl}/${lang}/${encodeURIComponent(decodedWord)}`;
 
   try {
     const data = await getRichWord(lang, decodedWord);
@@ -33,32 +38,20 @@ export async function generateMetadata({ params }) {
       return {
         title: 'Word not found | w9999',
         description: 'The requested word was not found in our database.',
+        alternates: { canonical: pageUrl },
+        robots: { index: false, follow: false },
       };
     }
 
     const title = `${data.word} in ${data.source_language_name} | w9999`;
     const description = `Learn "${data.word}" (${data.level || 'Beginner'}) with pronunciation, definition, examples, and translation. Free vocabulary tool.`;
-    const url = `${BASE_URL}/${lang}/${encodeURIComponent(decodedWord)}`;
+
+    const encoded = encodeURIComponent(decodedWord);
 
     return {
+      metadataBase: new URL(baseUrl),
       title,
       description,
-      canonical: url,
-      openGraph: {
-        title,
-        description,
-        url,
-        type: 'article',
-        siteName: 'w9999',
-        images: [
-          {
-            url: `${BASE_URL}/logo.png`,
-            width: 1200,
-            height: 630,
-            alt: `${data.word} - Learn vocabulary`,
-          },
-        ],
-      },
       keywords: [
         data.word,
         data.translation,
@@ -66,56 +59,50 @@ export async function generateMetadata({ params }) {
         `${data.word} meaning`,
         `${data.source_language_name} vocabulary`,
         data.level,
-      ].filter(Boolean).join(', '),
-      robots: 'index, follow',
+      ].filter(Boolean),
+
       alternates: {
-        languages: LANG_URLS,
+        canonical: pageUrl,
+        languages: {
+          en: `${baseUrl}/en/${encoded}`,
+          es: `${baseUrl}/es/${encoded}`,
+          ru: `${baseUrl}/ru/${encoded}`,
+          // optional:
+          // 'x-default': `${baseUrl}/en/${encoded}`,
+        },
       },
-      other: {
-        'ld+json': JSON.stringify({
-          '@context': 'https://schema.org',
-          '@type': 'BreadcrumbList',
-          itemListElement: [
-            {
-              '@type': 'ListItem',
-              position: 1,
-              name: 'W9999',
-              item: BASE_URL
-            },
-            {
-              '@type': 'ListItem',
-              position: 2,
-              name: `${lang.toUpperCase()} Words`,
-              item: `${BASE_URL}/${lang}`
-            },
-            {
-              '@type': 'ListItem',
-              position: 3,
-              name: data.word,
-              item: url
-            }
-          ]
-        })
-      }
+
+      openGraph: {
+        title,
+        description,
+        url: pageUrl,
+        type: 'article',
+        siteName: 'w9999',
+        images: [{ url: `${baseUrl}/logo.png`, width: 1200, height: 630, alt: `${data.word}` }],
+      },
+
+      robots: { index: true, follow: true },
     };
   } catch (error) {
     console.error(`Metadata generation failed for ${lang}/${decodedWord}:`, error);
     return {
       title: 'w9999 - Learn Vocabulary',
       description: 'Master 9,000+ most common words in 3 languages.',
+      alternates: { canonical: pageUrl },
     };
   }
 }
 
+
 export async function generateStaticParams() {
   try {
     const slugs = await getAllWordSlugs();
-    return slugs.map(slug => ({
+    return slugs.map((slug) => ({
       lang: slug.lang,
-      word: slug.word
+      word: slug.word,
     }));
   } catch (e) {
-    console.error("Failed to generate static params:", e);
+    console.error('Failed to generate static params:', e);
     return [];
   }
 }
@@ -123,18 +110,11 @@ export async function generateStaticParams() {
 export default async function Page({ params }) {
   const { lang, word } = await params;
   const decodedWord = decodeURIComponent(word);
+
   const data = await getRichWord(lang, decodedWord);
 
-  if (!data) {
-    return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <main className="container mx-auto px-4 py-20 text-center">
-          <h1 className="text-3xl font-bold text-gray-900 mb-4">Word not found</h1>
-          <p className="text-gray-600">The word "{decodedWord}" was not found.</p>
-        </main>
-      </div>
-    );
-  }
+  // If the API says 404, getRichWord returns null -> we render a real Next.js 404 page
+  if (!data) notFound();
 
   return <WordPageContent data={data} lang={lang} decodedWord={decodedWord} />;
 }

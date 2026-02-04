@@ -8,6 +8,8 @@ export default function WordPageContent({ data, lang, targetLang, decodedWord })
   const langFrom = lang;
   const langTo = targetLang;
 
+  const BASE_URL = process.env.NEXT_PUBLIC_SEO_DOMAIN;
+
   return (
     <>
       <main 
@@ -546,6 +548,23 @@ export default function WordPageContent({ data, lang, targetLang, decodedWord })
           word={decodedWord}
           langFrom={langFrom}
         /> */}
+
+
+          <script
+  type="application/ld+json"
+  dangerouslySetInnerHTML={{
+    __html: JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'w9999', item: BASE_URL },
+        { '@type': 'ListItem', position: 2, name: `${lang.toUpperCase()} Words`, item: `${BASE_URL}/${lang}` },
+        { '@type': 'ListItem', position: 3, name: data.word, item: `${BASE_URL}/${lang}/${encodeURIComponent(decodedWord)}` },
+      ],
+    }),
+  }}
+/>
+
       </main>
     </>
   );

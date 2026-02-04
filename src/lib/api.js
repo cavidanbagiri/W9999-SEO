@@ -2,9 +2,7 @@
 
 import axios from 'axios';
 
-// const BASE = process.env.NEXT_PUBLIC_API_URL || 'https://duolingopocketserver.onrender.com';
-// const BASE = 'https://api.w9999.app';
-const BASE = 'http://localhost:8000';
+const BASE = 'https://api.w9999.app';
 
 
 export async function getAllWordSlugs() {
@@ -30,19 +28,37 @@ export async function getAllWordSlugs() {
 }
 
 
+// export async function getRichWord(lang, word) {
+//   const encodedWord = encodeURIComponent(word);
+//   const url = `${BASE}/api/public/word-rich?from=${lang}&word=${encodedWord}`;
+//   const res = await fetch(url);
+    
+//   if (!res.ok) {
+//     const errorText = await res.text();
+//     throw new Error(`Word not found (${res.status}): ${errorText}`);
+//   }
+  
+//   const data = await res.json();
+  
+//   return data;
+// }
+
+
 export async function getRichWord(lang, word) {
   const encodedWord = encodeURIComponent(word);
   const url = `${BASE}/api/public/word-rich?from=${lang}&word=${encodedWord}`;
   const res = await fetch(url);
-    
+
+  // 404 = expected “not found” case during build/runtime
+  if (res.status === 404) return null;
+
+  // Other failures should still throw (500, 502, etc.)
   if (!res.ok) {
-    const errorText = await res.text();
-    throw new Error(`Word not found (${res.status}): ${errorText}`);
+    const errorText = await res.text().catch(() => '');
+    throw new Error(`getRichWord failed (${res.status}): ${errorText}`);
   }
-  
-  const data = await res.json();
-  
-  return data;
+
+  return res.json();
 }
 
 
@@ -58,16 +74,6 @@ export const generateSpeech = async (data) => {
 };
 
 
-
-
-/**
- * Unified fetcher for Top Words.
- * 
- * @param {string} languageCode - 'en', 'de', 'es', etc.
- * @param {number} limit - Number of words (default 1000)
- * @param {string|null} pos - (Optional) 'verb', 'noun', 'adjective'. 
- *                            If null/undefined, fetches mixed top words.
- */
 export async function getTopWords(languageCode, limit = 1000, pos = null) {
   try {
     let url;
