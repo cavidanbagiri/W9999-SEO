@@ -49,6 +49,8 @@ export async function getRichWord(lang, word) {
   const url = `${BASE}/api/public/word-rich?from=${lang}&word=${encodedWord}`;
   const res = await fetch(url);
 
+  // console.log('res is ',res)
+
   // 404 = expected “not found” case during build/runtime
   if (res.status === 404) return null;
 
@@ -107,34 +109,3 @@ export async function getTopWords(languageCode, limit = 1000, pos = null) {
 
 
 
-
-
-
-
-
-
-
-
-
-// export async function getTopWords(languageCode, limit = 1000) {
-//   try {
-//     const url = `${BASE}/api/public/top-words/${languageCode}?limit=${limit}`;
-//     const { data } = await axios.get(url);
-//     return data?.words || [];
-//   } catch (e) {
-//     console.error('[SEO] top words error:', e.message);
-//     return [];
-//   }
-// }
-
-
-// export async function getTopWordsByPos(languageCode, pos, limit = 1000) {
-//   try {
-//     const url = `${BASE}/api/public/top-words/${languageCode}/${pos}?limit=${limit}`;
-//     const { data } = await axios.get(url);
-//     return data?.words || [];
-//   } catch (e) {
-//     console.error('[SEO] top words POS error:', e.message);
-//     return [];
-//   }
-// }

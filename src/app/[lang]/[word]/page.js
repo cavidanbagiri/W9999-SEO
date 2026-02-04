@@ -7,14 +7,6 @@ import { notFound } from 'next/navigation';
 
 const BASE_URL = process.env.NEXT_PUBLIC_SEO_DOMAIN;
 
-const LANG_URLS = {
-  'en': `${BASE_URL}/en/words`,
-  'es': `${BASE_URL}/es/words`,
-  'ru': `${BASE_URL}/ru/words`,
-};
-// API_URL = process.env.NEXT_PUBLIC_API_URL;
-// LANG_URLS = process.env.NEXT_PUBLIC_LANG_URLS;
-
 function getTargetLanguage(lang) {
   const langMap = {
     'en': 'es',

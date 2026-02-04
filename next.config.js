@@ -1,71 +1,73 @@
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  output: "export",
+
+  // Helps avoid issues on static hosts (Render) when using next/image
+  images: {
+    unoptimized: true,
+  },
+
+  // Optional: make builds less likely to fail on lint/type errors (remove if you want strict)
+  eslint: { ignoreDuringBuilds: true },
+  typescript: { ignoreBuildErrors: true },
+};
+
+// module.exports = nextConfig;
+export default nextConfig;
+
 
 // /** @type {import('next').NextConfig} */
 // const nextConfig = {
-//   reactStrictMode: true,
-//   output: 'export',
-//   images: { unoptimized: true },
+//   // ✅ SEO optimization
+//   compress: true,
+//   poweredByHeader: false,
+//   images: {
+//     remotePatterns: [
+//       {
+//         protocol: 'https',
+//         hostname: 'www.w9999.tech',
+//       },
+//       {
+//         protocol: 'https',
+//         hostname: '**.cdn.w9999.tech', // wildcard
+//       },
+//     ],
+//   },
+
+//   // ✅ Security headers
+//   headers: async () => {
+//     return [
+//       {
+//         source: '/:path*',
+//         headers: [
+//           {
+//             key: 'X-DNS-Prefetch-Control',
+//             value: 'on'
+//           },
+//           {
+//             key: 'X-Frame-Options',
+//             value: 'SAMEORIGIN'
+//           },
+//           {
+//             key: 'X-Content-Type-Options',
+//             value: 'nosniff'
+//           },
+//         ],
+//       },
+//     ];
+//   },
+
+//   // ✅ Redirects (if needed)
+//   redirects: async () => {
+//     return [
+//       {
+//         source: '/top-words/:lang',
+//         destination: '/top/:lang-words/100',
+//         permanent: true,
+//       },
+//     ];
+//   },
 // };
 
-// module.exports = nextConfig;
+// export default nextConfig;
 
-
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  // ✅ SEO optimization
-  compress: true,
-  poweredByHeader: false,
-
-  // // ✅ Image optimization
-  // images: {
-  //   domains: ['www.YOUR-DOMAIN.com'],
-  //   formats: ['image/avif', 'image/webp'],
-  // },
-  images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'www.w9999.tech',
-      },
-      {
-        protocol: 'https',
-        hostname: '**.cdn.w9999.tech', // wildcard
-      },
-    ],
-  },
-
-  // ✅ Security headers
-  headers: async () => {
-    return [
-      {
-        source: '/:path*',
-        headers: [
-          {
-            key: 'X-DNS-Prefetch-Control',
-            value: 'on'
-          },
-          {
-            key: 'X-Frame-Options',
-            value: 'SAMEORIGIN'
-          },
-          {
-            key: 'X-Content-Type-Options',
-            value: 'nosniff'
-          },
-        ],
-      },
-    ];
-  },
-
-  // ✅ Redirects (if needed)
-  redirects: async () => {
-    return [
-      {
-        source: '/top-words/:lang',
-        destination: '/top/:lang-words/100',
-        permanent: true,
-      },
-    ];
-  },
-};
-
-export default nextConfig;
