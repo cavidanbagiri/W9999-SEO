@@ -28,43 +28,6 @@ export function parseCategorySlug(slug) {
   return mapping[slug] || null;
 }
 
-// ============================================
-// STATIC GENERATION
-// ============================================
-
-// export async function generateStaticParams() {
-//   const categories = [
-//     'english-words', 'english-verbs', 'english-nouns', 'english-adjectives',
-//     'russian-words', 'russian-verbs', 'russian-nouns', 'russian-adjectives',
-//     'spanish-words', 'spanish-verbs', 'spanish-nouns', 'spanish-adjectives',
-//   ];
-
-//   const sizes = ['100', '300', '500', '1000', '2000', '3000', '5000', '10000'];
-//   const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-
-//   const params = [];
-
-//   for (const category of categories) {
-//     for (const size of sizes) {
-//       try {
-//         // ✅ Verify data exists before generating page
-//         const response = await fetch(
-//           `${baseUrl}/api/top-words/${category}/${size}`,
-//           { cache: 'force-cache' }
-//         );
-
-//         if (response.ok) {
-//           params.push({ category, size });
-//         }
-//       } catch (error) {
-//         console.warn(`⚠️ Skipping ${category}/${size} - API unavailable`);
-//       }
-//     }
-//   }
-
-//   return params;
-// }
-
 export const dynamic = "force-static";
 
 export async function generateStaticParams() {
@@ -81,10 +44,6 @@ export async function generateStaticParams() {
   );
 }
 
-
-// ============================================
-// SEO METADATA (CRITICAL FOR RANKING)
-// ============================================
 
 const keywordMap = {
   'english-words': 'top 100 english words, 100 most common words english, learn essential english vocabulary, beginner english',

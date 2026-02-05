@@ -2,19 +2,7 @@
 
 import { getAllWordSlugs, getRichWord } from '@/lib/api';
 import WordPageContent from './components/WordPageContent';
-
 import { notFound } from 'next/navigation';
-
-const BASE_URL = process.env.NEXT_PUBLIC_SEO_DOMAIN;
-
-function getTargetLanguage(lang) {
-  const langMap = {
-    'en': 'es',
-    'es': 'en',
-    'ru': 'en',
-  };
-  return langMap[lang] || 'en';
-}
 
 export async function generateMetadata({ params }) {
   const { lang, word } = await params;
@@ -59,8 +47,6 @@ export async function generateMetadata({ params }) {
           en: `${baseUrl}/en/${encoded}`,
           es: `${baseUrl}/es/${encoded}`,
           ru: `${baseUrl}/ru/${encoded}`,
-          // optional:
-          // 'x-default': `${baseUrl}/en/${encoded}`,
         },
       },
 

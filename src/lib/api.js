@@ -3,45 +3,46 @@
 import axios from 'axios';
 
 const BASE = 'https://api.w9999.app';
+// const BASE = 'http://localhost:8000';
 
+
+// export async function getAllWordSlugs() {
+//   try {
+//     const url = `${BASE}/api/public/slugs`;
+    
+//     const { data } = await axios.get(url);
+    
+//     const transformed = Array.isArray(data) 
+//       ? data.map(item => {
+//           const encoded = encodeURIComponent(item.word);
+//           return {
+//             lang: item.lang,
+//             word: encoded
+//           };
+//         })
+//       : [];
+    
+//     return transformed;
+//   } catch (e) {
+//     return [];
+//   }
+// }
 
 export async function getAllWordSlugs() {
   try {
     const url = `${BASE}/api/public/slugs`;
-    
     const { data } = await axios.get(url);
-    
-    const transformed = Array.isArray(data) 
-      ? data.map(item => {
-          const encoded = encodeURIComponent(item.word);
-          return {
-            lang: item.lang,
-            word: encoded
-          };
-        })
+
+    return Array.isArray(data)
+      ? data.map(item => ({
+          lang: item.lang,
+          word: item.word, // keep raw
+        }))
       : [];
-    
-    return transformed;
   } catch (e) {
     return [];
   }
 }
-
-
-// export async function getRichWord(lang, word) {
-//   const encodedWord = encodeURIComponent(word);
-//   const url = `${BASE}/api/public/word-rich?from=${lang}&word=${encodedWord}`;
-//   const res = await fetch(url);
-    
-//   if (!res.ok) {
-//     const errorText = await res.text();
-//     throw new Error(`Word not found (${res.status}): ${errorText}`);
-//   }
-  
-//   const data = await res.json();
-  
-//   return data;
-// }
 
 
 export async function getRichWord(lang, word) {
@@ -49,9 +50,6 @@ export async function getRichWord(lang, word) {
   const url = `${BASE}/api/public/word-rich?from=${lang}&word=${encodedWord}`;
   const res = await fetch(url);
 
-  // console.log('res is ',res)
-
-  // 404 = expected “not found” case during build/runtime
   if (res.status === 404) return null;
 
   // Other failures should still throw (500, 502, etc.)
