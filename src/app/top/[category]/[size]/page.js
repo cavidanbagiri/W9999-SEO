@@ -1,6 +1,6 @@
 
 import { notFound } from 'next/navigation';
-import { getTopWords } from '@/lib/api';
+import { getTopWords, encodeWordSlug } from '@/lib/api';
 import Link from 'next/link';
 
 // ============================================
@@ -29,20 +29,6 @@ export function parseCategorySlug(slug) {
 }
 
 export const dynamic = "force-static";
-
-export async function generateStaticParams() {
-  const categories = [
-    'english-words', 'english-verbs', 'english-nouns', 'english-adjectives',
-    'russian-words', 'russian-verbs', 'russian-nouns', 'russian-adjectives',
-    'spanish-words', 'spanish-verbs', 'spanish-nouns', 'spanish-adjectives',
-  ];
-
-  const sizes = ['100', '300', '500', '1000', '2000', '3000', '5000', '10000'];
-
-  return categories.flatMap(category =>
-    sizes.map(size => ({ category, size }))
-  );
-}
 
 
 const keywordMap = {
@@ -75,76 +61,6 @@ const descriptionMap = {
   'spanish-adjectives': 'Domina los adjetivos en español más útiles. Palabras descriptivas ordenadas por frecuencia.',
 };
 
-export async function generateMetadata({ params }) {
-  const { category, size } = await params;
-  const config = parseCategorySlug(category);
-
-  if (!config) return { title: 'Not Found' };
-
-  const baseUrl = process.env.NEXT_PUBLIC_SEO_DOMAIN;
-  const canonicalUrl = `${baseUrl}/top/${category}/${size}`;
-  
-  // Alternative language links
-  const langMap = { 'en': 'english', 'ru': 'russian', 'es': 'spanish' };
-  const currentLangCode = Object.keys(langMap).find(code => langMap[code] === category.split('-')[0]);
-  
-  const otherLangs = {
-    'es': category.replace(/^english-|^russian-/, 'spanish-'),
-    'ru': category.replace(/^english-|^spanish-/, 'russian-'),
-    'en': category.replace(/^russian-|^spanish-/, 'english-'),
-  };
-
-  const title = `Top ${size} ${config.langName} ${config.typeLabel} | Frequency List & CEFR Levels`;
-  const description = descriptionMap[category] || `Learn the top ${size} ${config.langName} ${config.typeLabel.toLowerCase()}.`;
-
-  return {
-    metadataBase: new URL(baseUrl),
-    title,
-    description,
-    keywords: keywordMap[category],
-    
-    // ✅ CANONICAL + HREFLANG (Critical for multilingual SEO)
-    alternates: {
-      canonical: canonicalUrl,
-      languages: {
-        'es': `${baseUrl}/top/${otherLangs.es}/${size}`,
-        'ru': `${baseUrl}/top/${otherLangs.ru}/${size}`,
-        'en': `${baseUrl}/top/${otherLangs.en}/${size}`,
-      },
-    },
-
-    // ✅ OPEN GRAPH (Social media + rich snippets)
-    openGraph: {
-      title,
-      description,
-      url: canonicalUrl,
-      type: 'website',
-      siteName: 'w9999 - Learn Languages',
-      images: [
-        {
-          url: `${baseUrl}/logo.png`,
-          width: 1200,
-          height: 630,
-          alt: `Top ${size} ${config.langName} ${config.typeLabel}`,
-        },
-      ],
-    },
-
-    // ✅ ROBOTS DIRECTIVES
-    robots: {
-      index: true,
-      follow: true,
-      'max-snippet': -1,
-      'max-image-preview': 'large',
-      'max-video-preview': -1,
-    },
-  };
-}
-
-// ============================================
-// FEATURES (Reusable component data)
-// ============================================
-
 const features = [
   {
     icon: '📚',
@@ -168,10 +84,94 @@ const features = [
   },
 ];
 
+export async function generateStaticParams() {
+  const categories = [
+    'english-words', 'english-verbs', 'english-nouns', 'english-adjectives',
+    'russian-words', 'russian-verbs', 'russian-nouns', 'russian-adjectives',
+    'spanish-words', 'spanish-verbs', 'spanish-nouns', 'spanish-adjectives',
+  ];
+
+  const sizes = ['100', '300', '500', '1000', '2000', '3000', '5000', '10000'];
+
+  const params = categories.flatMap(category =>
+    sizes.map(size => ({ category, size }))
+  );
+
+  console.log(`📦 [generateStaticParams] Generating ${params.length} top words pages`);
+  return params;
+}
+
+export async function generateMetadata({ params }) {
+  const { category, size } = await params;
+  const config = parseCategorySlug(category);
+
+  console.log(`🔍 [generateMetadata] Category: ${category}, Size: ${size}`);
+
+  if (!config) {
+    console.log('❌ [generateMetadata] Invalid category');
+    return { title: 'Not Found' };
+  }
+
+  const baseUrl = process.env.NEXT_PUBLIC_SEO_DOMAIN;
+  const canonicalUrl = `${baseUrl}/top/${category}/${size}`;
+  
+  const langMap = { 'en': 'english', 'ru': 'russian', 'es': 'spanish' };
+  
+  const otherLangs = {
+    'es': category.replace(/^english-|^russian-/, 'spanish-'),
+    'ru': category.replace(/^english-|^spanish-/, 'russian-'),
+    'en': category.replace(/^russian-|^spanish-/, 'english-'),
+  };
+
+  const title = `Top ${size} ${config.langName} ${config.typeLabel} | Frequency List & CEFR Levels`;
+  const description = descriptionMap[category] || `Learn the top ${size} ${config.langName} ${config.typeLabel.toLowerCase()}.`;
+
+  console.log(`✅ [generateMetadata] Generated for: ${title}`);
+
+  return {
+    metadataBase: new URL(baseUrl),
+    title,
+    description,
+    keywords: keywordMap[category],
+    
+    alternates: {
+      canonical: canonicalUrl,
+      languages: {
+        'es': `${baseUrl}/top/${otherLangs.es}/${size}`,
+        'ru': `${baseUrl}/top/${otherLangs.ru}/${size}`,
+        'en': `${baseUrl}/top/${otherLangs.en}/${size}`,
+      },
+    },
+
+    openGraph: {
+      title,
+      description,
+      url: canonicalUrl,
+      type: 'website',
+      siteName: 'w9999 - Learn Languages',
+      images: [{
+        url: `${baseUrl}/logo.png`,
+        width: 1200,
+        height: 630,
+        alt: `Top ${size} ${config.langName} ${config.typeLabel}`,
+      }],
+    },
+
+    robots: {
+      index: true,
+      follow: true,
+      'max-snippet': -1,
+      'max-image-preview': 'large',
+      'max-video-preview': -1,
+    },
+  };
+}
+
 // ============================================
 // SCHEMA.ORG JSON-LD (THE REAL SEO POWER)
 // ============================================
 
+// ✅ UPDATED: Use urlSlug in schema
 function generateSchema(category, size, words, config) {
   const baseUrl = process.env.NEXT_PUBLIC_SEO_DOMAIN;
   const canonicalUrl = `${baseUrl}/top/${category}/${size}`;
@@ -181,7 +181,6 @@ function generateSchema(category, size, words, config) {
   return {
     "@context": "https://schema.org",
     "@graph": [
-      // 1. COLLECTION PAGE (Main entity)
       {
         "@type": "CollectionPage",
         "@id": `${canonicalUrl}#webpage`,
@@ -192,14 +191,8 @@ function generateSchema(category, size, words, config) {
         "inLanguage": langCode,
         "datePublished": "2024-01-01T00:00:00Z",
         "dateModified": new Date().toISOString(),
-        "author": {
-          "@type": "Organization",
-          "@id": `${baseUrl}#organization`,
-        },
-        "publisher": {
-          "@type": "Organization",
-          "@id": `${baseUrl}#organization`,
-        },
+        "author": { "@type": "Organization", "@id": `${baseUrl}#organization` },
+        "publisher": { "@type": "Organization", "@id": `${baseUrl}#organization` },
         "isPartOf": { "@id": `${baseUrl}#website` },
         "breadcrumb": { "@id": `${canonicalUrl}#breadcrumb` },
         "primaryImageOfPage": {
@@ -210,39 +203,17 @@ function generateSchema(category, size, words, config) {
         },
       },
 
-      // 2. BREADCRUMB (Navigation SEO)
       {
         "@type": "BreadcrumbList",
         "@id": `${canonicalUrl}#breadcrumb`,
         "itemListElement": [
-          {
-            "@type": "ListItem",
-            "position": 1,
-            "name": "Home",
-            "item": baseUrl,
-          },
-          {
-            "@type": "ListItem",
-            "position": 2,
-            "name": "Top Words",
-            "item": `${baseUrl}/top`,
-          },
-          {
-            "@type": "ListItem",
-            "position": 3,
-            "name": config.langName,
-            "item": `${baseUrl}/top/${category.split('-')[0]}-words/100`,
-          },
-          {
-            "@type": "ListItem",
-            "position": 4,
-            "name": `Top ${size} ${typeLabel}`,
-            "item": canonicalUrl,
-          },
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": baseUrl },
+          { "@type": "ListItem", "position": 2, "name": "Top Words", "item": `${baseUrl}/top` },
+          { "@type": "ListItem", "position": 3, "name": config.langName, "item": `${baseUrl}/top/${category.split('-')[0]}-words/100` },
+          { "@type": "ListItem", "position": 4, "name": `Top ${size} ${typeLabel}`, "item": canonicalUrl },
         ],
       },
 
-      // 3. LEARNING RESOURCE (Educational content boost)
       {
         "@type": "LearningResource",
         "@id": `${canonicalUrl}#resource`,
@@ -252,24 +223,16 @@ function generateSchema(category, size, words, config) {
         "inLanguage": langCode,
         "learningResourceType": "Vocabulary List",
         "educationalUse": "Vocabulary Building",
-        "provider": {
-          "@type": "Organization",
-          "@id": `${baseUrl}#organization`,
-        },
+        "provider": { "@type": "Organization", "@id": `${baseUrl}#organization` },
         "hasPart": words.slice(0, 100).map((w, idx) => ({
           "@type": "Thing",
           "name": w.text,
           "position": idx + 1,
-          "url": `${baseUrl}/${langCode}/${w.text}`,
+          "url": `${baseUrl}/${langCode}/${w.urlSlug}`, // ✅ Use encoded slug
         })),
-        "offers": {
-          "@type": "Offer",
-          "price": "0",
-          "priceCurrency": "USD",
-        },
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
       },
 
-      // 4. ITEM LIST (Word ranking schema)
       {
         "@type": "ItemList",
         "@id": `${canonicalUrl}#wordlist`,
@@ -279,16 +242,12 @@ function generateSchema(category, size, words, config) {
           "@type": "ListItem",
           "position": idx + 1,
           "name": w.text,
-          "url": `${baseUrl}/${langCode}/${w.text}`,
+          "url": `${baseUrl}/${langCode}/${w.urlSlug}`, // ✅ Use encoded slug
           "description": `Rank #${idx + 1} | ${w.level ? `CEFR ${w.level}` : 'N/A'}${w.pos ? ` | ${w.pos}` : ''}`,
-          "item": {
-            "@type": "Thing",
-            "name": w.text,
-          },
+          "item": { "@type": "Thing", "name": w.text },
         })),
       },
 
-      // 5. FAQ SCHEMA (Featured snippets)
       {
         "@type": "FAQPage",
         "mainEntity": [
@@ -319,22 +278,6 @@ function generateSchema(category, size, words, config) {
         ],
       },
 
-      // 6. ORGANIZATION (Brand identity)
-      // {
-      //   "@type": "Organization",
-      //   "@id": `${baseUrl}#organization`,
-      //   "name": "w9999",
-      //   "url": baseUrl,
-      //   "logo": `${baseUrl}/logo.png`,
-      //   "description": "Free language learning platform with vocabulary lists, flashcards, and pronunciation guides.",
-      //   "sameAs": [
-      //     "https://twitter.com/w9999",
-      //     "https://facebook.com/w9999",
-      //     "https://youtube.com/w9999",
-      //   ],
-      // },
-
-      // 7. WEBSITE (Site-wide schema)
       {
         "@type": "WebSite",
         "@id": `${baseUrl}#website`,
@@ -343,10 +286,7 @@ function generateSchema(category, size, words, config) {
         "inLanguage": "en",
         "potentialAction": {
           "@type": "SearchAction",
-          "target": {
-            "@type": "EntryPoint",
-            "urlTemplate": `${baseUrl}/search?q={search_term}`,
-          },
+          "target": { "@type": "EntryPoint", "urlTemplate": `${baseUrl}/search?q={search_term}` },
           "query-input": "required name=search_term",
         },
       },
@@ -362,26 +302,35 @@ export default async function TopWordsDynamicPage({ params }) {
   const { category, size } = await params;
   const config = parseCategorySlug(category);
 
-  if (!config) notFound();
+  console.log(`📄 [TopWordsDynamicPage] Rendering: ${category}/${size}`);
+
+  if (!config) {
+    console.log('❌ [TopWordsDynamicPage] Invalid category');
+    notFound();
+  }
 
   const limit = parseInt(size, 10);
-  if (isNaN(limit) || limit <= 0) notFound();
+  if (isNaN(limit) || limit <= 0) {
+    console.log('❌ [TopWordsDynamicPage] Invalid size');
+    notFound();
+  }
 
-  // ✅ Fetch words with correct params
   const words = await getTopWords(config.lang, limit, config.pos);
 
-  if (!words || words.length === 0) notFound();
+  if (!words || words.length === 0) {
+    console.log('❌ [TopWordsDynamicPage] No words found');
+    notFound();
+  }
+
+  console.log(`✅ [TopWordsDynamicPage] Rendering ${words.length} words`);
 
   const baseUrl = process.env.NEXT_PUBLIC_SEO_DOMAIN;
-  const canonicalUrl = `${baseUrl}/top/${category}/${size}`;
-
-  // Related sizes (for internal linking)
   const sizes = ['100', '300', '500', '1000', '2000', '3000', '5000', '10000'];
   const relatedSizes = sizes.filter(s => s !== size);
 
   return (
     <main className="min-h-screen bg-gray-50">
-      {/* === HERO SECTION === */}
+      {/* HERO SECTION - unchanged */}
       <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white">
         <div className="max-w-6xl mx-auto px-4 py-12 md:py-16">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">
@@ -402,7 +351,7 @@ export default async function TopWordsDynamicPage({ params }) {
         </div>
       </div>
 
-      {/* === FEATURES GRID === */}
+      {/* FEATURES GRID - unchanged */}
       <div className="max-w-6xl mx-auto px-4 py-16">
         <h2 className="text-3xl font-bold text-gray-900 mb-12 text-center">Why Choose Our Lists?</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -425,7 +374,7 @@ export default async function TopWordsDynamicPage({ params }) {
         </div>
       </div>
 
-      {/* === SIZE SWITCHER (Internal links for ranking) === */}
+      {/* SIZE SWITCHER - unchanged */}
       <div className="bg-white border-b border-gray-200">
         <div className="max-w-6xl mx-auto px-4 py-8">
           <h2 className="text-lg font-bold text-gray-900 mb-4">Other List Sizes:</h2>
@@ -433,7 +382,6 @@ export default async function TopWordsDynamicPage({ params }) {
             {relatedSizes.map(s => (
               <Link
                 key={s}
-                // href={`${process.env.NEXT_PUBLIC_SEO_DOMAIN}/top/${category}/${s}`}
                 href={`/top/${category}/${s}`}
                 className="px-4 py-2 rounded-lg font-semibold bg-gray-100 text-gray-700 hover:bg-blue-600 hover:text-white transition-all"
               >
@@ -444,7 +392,7 @@ export default async function TopWordsDynamicPage({ params }) {
         </div>
       </div>
 
-      {/* === LANGUAGE SWITCHER === */}
+      {/* LANGUAGE SWITCHER - unchanged */}
       <div className="bg-white border-b border-gray-200">
         <div className="max-w-6xl mx-auto px-4 py-8">
           <h2 className="text-lg font-bold text-gray-900 mb-4">Other Languages:</h2>
@@ -454,7 +402,6 @@ export default async function TopWordsDynamicPage({ params }) {
               return (
                 <Link
                   key={lang}
-                  // href={`${process.env.NEXT_PUBLIC_SEO_DOMAIN}/top/${newCategory}/${size}`}
                   href={`/top/${newCategory}/${size}`}
                   className={`px-4 py-2 rounded-lg font-semibold transition-all ${
                     category.startsWith(lang)
@@ -470,7 +417,7 @@ export default async function TopWordsDynamicPage({ params }) {
         </div>
       </div>
 
-      {/* === WORD COUNT === */}
+      {/* WORD COUNT - unchanged */}
       <div className="bg-white border-b border-gray-200">
         <div className="max-w-6xl mx-auto px-4 py-4">
           <p className="text-gray-700">
@@ -479,7 +426,7 @@ export default async function TopWordsDynamicPage({ params }) {
         </div>
       </div>
 
-      {/* === WORD LIST SECTION === */}
+      {/* ✅ WORD LIST SECTION - CRITICAL FIX */}
       <section className="max-w-6xl mx-auto px-4 py-12">
         <h2 className="text-2xl font-bold text-gray-900 mb-8">
           Complete {config.typeLabel} List ({words.length.toLocaleString()})
@@ -489,7 +436,7 @@ export default async function TopWordsDynamicPage({ params }) {
           {words.map((w, idx) => (
             <Link
               key={w.id || idx}
-              href={`/${config.lang}/${w.text}`}
+              href={`/${config.lang}/${w.urlSlug}`} // ✅ USE ENCODED SLUG
               className="flex flex-col p-4 bg-white border border-gray-200 rounded-xl hover:border-blue-500 hover:shadow-lg transition-all duration-300"
             >
               {/* Rank Badge */}
@@ -504,7 +451,7 @@ export default async function TopWordsDynamicPage({ params }) {
                 )}
               </div>
 
-              {/* Word */}
+              {/* Word - DISPLAY ORIGINAL */}
               <h3 className="text-lg font-bold text-blue-600 hover:underline mb-3">
                 {w.text}
               </h3>
@@ -527,7 +474,7 @@ export default async function TopWordsDynamicPage({ params }) {
         </div>
       </section>
 
-      {/* === BOTTOM CTA === */}
+      {/* BOTTOM CTA - unchanged */}
       <div className="bg-gradient-to-r from-blue-50 to-indigo-50 mt-16 border-t border-gray-200">
         <div className="max-w-3xl mx-auto px-4 py-16 text-center">
           <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
@@ -545,7 +492,7 @@ export default async function TopWordsDynamicPage({ params }) {
         </div>
       </div>
 
-      {/* === SCHEMA.ORG JSON-LD === */}
+      {/* SCHEMA.ORG JSON-LD */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -555,4 +502,3 @@ export default async function TopWordsDynamicPage({ params }) {
     </main>
   );
 }
-

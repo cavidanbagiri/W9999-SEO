@@ -3,30 +3,15 @@
 import axios from 'axios';
 
 const BASE = 'https://api.w9999.app';
-// const BASE = 'http://localhost:8000';
 
+// Helper functions for encoding/decoding
+export function encodeWordSlug(word) {
+  return word.replace(/\//g, '~');
+}
 
-// export async function getAllWordSlugs() {
-//   try {
-//     const url = `${BASE}/api/public/slugs`;
-    
-//     const { data } = await axios.get(url);
-    
-//     const transformed = Array.isArray(data) 
-//       ? data.map(item => {
-//           const encoded = encodeURIComponent(item.word);
-//           return {
-//             lang: item.lang,
-//             word: encoded
-//           };
-//         })
-//       : [];
-    
-//     return transformed;
-//   } catch (e) {
-//     return [];
-//   }
-// }
+export function decodeWordSlug(slug) {
+  return slug.replace(/~/g, '/');
+}
 
 export async function getAllWordSlugs() {
   try {
@@ -36,14 +21,14 @@ export async function getAllWordSlugs() {
     return Array.isArray(data)
       ? data.map(item => ({
           lang: item.lang,
-          word: item.word, // keep raw
+          word: encodeWordSlug(item.word), // ENCODE for URL
         }))
       : [];
   } catch (e) {
+    console.error('getAllWordSlugs error:', e);
     return [];
   }
 }
-
 
 export async function getRichWord(lang, word) {
   const encodedWord = encodeURIComponent(word);
@@ -61,7 +46,6 @@ export async function getRichWord(lang, word) {
   return res.json();
 }
 
-
 export const generateSpeech = async (data) => {
   if (!data.text) {
     return null;
@@ -73,37 +57,30 @@ export const generateSpeech = async (data) => {
   return response.data; // Returns the Blob
 };
 
-
 export async function getTopWords(languageCode, limit = 1000, pos = null) {
   try {
     let url;
 
-    // Check if we need the POS-specific endpoint
-    // We ignore 'words' or 'all' if those are accidentally passed as a category
     if (pos && pos !== 'words' && pos !== 'all') {
-      // Endpoint: /top-words/{lang}/{pos}
       url = `${BASE}/api/public/top-words/${languageCode}/${pos}?limit=${limit}`;
     } else {
-      // Endpoint: /top-words/{lang}
       url = `${BASE}/api/public/top-words/${languageCode}?limit=${limit}`;
     }
 
+    console.log(`🔄 [getTopWords] Fetching: ${url}`);
     const { data } = await axios.get(url);
     
-    // Return empty array if words is missing for safety
-    return data?.words || [];
+    // ENCODE words containing '/' for URL safety
+    const words = (data?.words || []).map(word => ({
+      ...word,
+      urlSlug: encodeWordSlug(word.text), // Add encoded version
+    }));
+
+    console.log(`✅ [getTopWords] Retrieved ${words.length} words for ${languageCode}`);
+    return words;
 
   } catch (e) {
-    // Detailed error logging specifically for Server Side debugging
-    console.error(`[SEO] Fetch error for ${languageCode} (POS: ${pos || 'mixed'}):`, e.message);
+    console.error(`💥 [getTopWords] Error for ${languageCode} (POS: ${pos || 'mixed'}):`, e.message);
     return [];
   }
 }
-
-
-
-
-
-
-
-
