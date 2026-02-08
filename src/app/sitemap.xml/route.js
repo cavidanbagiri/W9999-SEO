@@ -1,6 +1,5 @@
 
 
-// src/app/sitemap.xml/route.js
 
 import { getAllWordSlugs } from '@/lib/api';
 // import { BASE_URL } from '@/lib/config';
