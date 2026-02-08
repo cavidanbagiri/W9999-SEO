@@ -1,5 +1,7 @@
+export const dynamic = "force-static";
+
 export async function GET() {
-  const baseUrl = process.env.NEXT_PUBLIC_SEO_DOMAIN;
+  const baseUrl = process.env.NEXT_PUBLIC_SEO_DOMAIN || "https://www.w9999.tech";
 
   const content = `User-agent: *
 Allow: /
