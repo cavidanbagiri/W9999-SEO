@@ -2,9 +2,9 @@
 import { notFound } from 'next/navigation';
 import { getTopWords, encodeWordSlug } from '@/lib/api';
 import Link from 'next/link';
-
-import { useEffect } from 'react';
-import { yandexEvents } from '@/lib/yandexEvents';
+import WordListTracker from '@/components/WordListTracker';  // ← ADD THIS
+// import { useEffect } from 'react';
+// import { yandexEvents } from '@/lib/yandexEvents';
 
 // ============================================
 // CATEGORY & LANGUAGE CONFIG
@@ -464,30 +464,6 @@ export default async function TopWordsDynamicPage({ params }) {
 
   // console.log(`📄 [TopWordsDynamicPage] Rendering: ${category}/${size}`);
 
-  // ADD THIS - Track scroll to bottom
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollPosition = window.scrollY + window.innerHeight;
-      const pageHeight = document.documentElement.scrollHeight;
-      
-      // If user scrolled to bottom (within 100px)
-      if (pageHeight - scrollPosition < 100) {
-        yandexEvents.trackFullScroll(config.lang);
-      }
-    };
-    
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [config.lang]);
-  
-  // UPDATE your word click handler
-  const handleWordClick = (word, position) => {
-    // Add this tracking line
-    yandexEvents.trackWordClick(word.text, position, config.lang);
-    
-    // Your existing navigation logic
-    // router.push(`/${config.lang}/${word.urlSlug}`);
-  };
   
 
   if (!config) {
@@ -619,9 +595,9 @@ export default async function TopWordsDynamicPage({ params }) {
         </h2>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          <WordListTracker language={config.lang} />
           {words.map((w, idx) => (
             <Link
-            onClick={() => handleWordClick(word, idx + 1)}  // Your existing onClick
               key={w.id || idx}
               href={`/${config.lang}/${w.urlSlug}`} // ✅ USE ENCODED SLUG
               className="flex flex-col p-4 bg-white border border-gray-200 rounded-xl hover:border-blue-500 hover:shadow-lg transition-all duration-300"
