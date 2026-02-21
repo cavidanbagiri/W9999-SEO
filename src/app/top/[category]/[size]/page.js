@@ -3,6 +3,9 @@ import { notFound } from 'next/navigation';
 import { getTopWords, encodeWordSlug } from '@/lib/api';
 import Link from 'next/link';
 
+import { useEffect } from 'react';
+import { yandexEvents } from '@/lib/yandexEvents';
+
 // ============================================
 // CATEGORY & LANGUAGE CONFIG
 // ============================================
@@ -105,10 +108,7 @@ export async function generateMetadata({ params }) {
   const { category, size } = await params;
   const config = parseCategorySlug(category);
 
-  console.log(`🔍 [generateMetadata] Category: ${category}, Size: ${size}`);
-
   if (!config) {
-    console.log('❌ [generateMetadata] Invalid category');
     return { title: 'Not Found' };
   }
 
@@ -126,13 +126,56 @@ export async function generateMetadata({ params }) {
   const title = `Top ${size} ${config.langName} ${config.typeLabel} | Frequency List & CEFR Levels`;
   const description = descriptionMap[category] || `Learn the top ${size} ${config.langName} ${config.typeLabel.toLowerCase()}.`;
 
-  console.log(`✅ [generateMetadata] Generated for: ${title}`);
+
+
+  // ============================================
+  // YANDEX-SPECIFIC META TAGS - ADD THESE
+  // ============================================
+  
+  // For Russian pages, create Russian-language title and description
+  const ruTitle = config.lang === 'ru' 
+    ? `Топ ${size} ${getRussianWordType(config.typeLabel)} | Список частотности с уровнями CEFR`
+    : null;
+    
+  const ruDescription = config.lang === 'ru'
+    ? descriptionMap[`ru-${category}`] || `Изучайте топ ${size} ${getRussianWordType(config.typeLabel).toLowerCase()} с частотным рейтингом и уровнями CEFR. Бесплатный список для всех уровней.`
+    : null;
+
+  // Function to get Russian word type
+  function getRussianWordType(typeLabel) {
+    const types = {
+      'Words': 'русских слов',
+      'Verbs': 'русских глаголов',
+      'Nouns': 'русских существительных',
+      'Adjectives': 'русских прилагательных'
+    };
+    return types[typeLabel] || 'русских слов';
+  }
+    ////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
 
   return {
     metadataBase: new URL(baseUrl),
     title,
     description,
     keywords: keywordMap[category],
+
+
+    // YANDEX ENHANCEMENT 1: Add Russian-language metadata for Russian pages
+    ...(config.lang === 'ru' && {
+      // Yandex优先考虑俄语元数据
+      'yandex': {
+        'title': ruTitle,
+        'description': ruDescription,
+        'noindex': false,
+        'nofollow': false,
+      },
+    }),
+    ////////////////////////////////////////////////////////////////////////////////////
     
     alternates: {
       canonical: canonicalUrl,
@@ -157,6 +200,22 @@ export async function generateMetadata({ params }) {
       }],
     },
 
+    // YANDEX ENHANCEMENT 2: Additional Yandex-specific meta tags
+    other: {
+      // Tell Yandex this is a learning resource
+      'yandex_recommendations': 'true',
+      'yandex_page_type': config.typeLabel,
+      'yandex_content_language': config.lang,
+      'yandex_educational_level': 'A1-C2',
+      'yandex_resource_type': 'vocabulary_list',
+      // For Russian pages, add content verification
+      ...(config.lang === 'ru' && {
+        'yandex_verified_content': 'true',
+        'yandex_audience': 'russian_language_learners',
+      }),
+    },
+    ////////////////////////////////////////////////////////////////////////////////////
+
     robots: {
       index: true,
       follow: true,
@@ -177,6 +236,46 @@ function generateSchema(category, size, words, config) {
   const canonicalUrl = `${baseUrl}/top/${category}/${size}`;
   const typeLabel = config.typeLabel;
   const langCode = config.lang;
+
+
+
+  // ============================================
+  // YANDEX ENHANCEMENT 1: Calculate quality metrics
+  // ============================================
+  function calculateWordListQuality(words) {
+    // Calculate how many words have complete data
+    const wordsWithLevel = words.filter(w => w.level).length;
+    const wordsWithPos = words.filter(w => w.pos).length;
+    const wordsWithExamples = words.filter(w => w.example).length;
+    
+    const totalWords = words.length;
+    
+    return {
+      completeness: Math.round((wordsWithLevel / totalWords) * 100),
+      accuracy: Math.round((wordsWithPos / totalWords) * 100),
+      example_coverage: Math.round((wordsWithExamples / totalWords) * 100),
+      total_quality: Math.round(
+        ((wordsWithLevel + wordsWithPos + wordsWithExamples) / (totalWords * 3)) * 100
+      ),
+    };
+  }
+
+  // ============================================
+  // YANDEX ENHANCEMENT 2: Get Russian language name
+  // ============================================
+  function getRussianLanguageName(langName) {
+    const names = {
+      'English': 'Английский',
+      'Russian': 'Русский',
+      'Spanish': 'Испанский'
+    };
+    return names[langName] || langName;
+  }
+
+  const qualityMetrics = calculateWordListQuality(words);
+  const russianLangName = getRussianLanguageName(config.langName);
+
+
 
   return {
     "@context": "https://schema.org",
@@ -201,7 +300,14 @@ function generateSchema(category, size, words, config) {
           "width": 1200,
           "height": 630,
         },
+      // YANDEX ENHANCEMENT 3: Add Yandex-specific webpage properties
+        "yandex:qualityScore": qualityMetrics.total_quality,
+        "yandex:contentType": "educational",
+        "yandex:audience": "language_learners",
+        "yandex:difficulty": size <= 500 ? "beginner" : size <= 2000 ? "intermediate" : "advanced",
       },
+
+      
 
       {
         "@type": "BreadcrumbList",
@@ -213,6 +319,10 @@ function generateSchema(category, size, words, config) {
           { "@type": "ListItem", "position": 4, "name": `Top ${size} ${typeLabel}`, "item": canonicalUrl },
         ],
       },
+
+
+      
+
 
       {
         "@type": "LearningResource",
@@ -229,8 +339,23 @@ function generateSchema(category, size, words, config) {
           "name": w.text,
           "position": idx + 1,
           "url": `${baseUrl}/${langCode}/${w.urlSlug}`, // ✅ Use encoded slug
+          "yandex:frequency": idx + 1,
+          "yandex:cefrLevel": w.level || "A1",
         })),
         "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+        // YANDEX ENHANCEMENT 5: Quality metrics for Yandex
+        "yandex:quality": {
+          "completeness": qualityMetrics.completeness,
+          "accuracy": qualityMetrics.accuracy,
+          "example_coverage": qualityMetrics.example_coverage,
+          "total_quality": qualityMetrics.total_quality,
+        },
+        "yandex:statistics": {
+          "total_words": words.length,
+          "words_with_levels": words.filter(w => w.level).length,
+          "words_with_examples": words.filter(w => w.example).length,
+          "last_updated": new Date().toISOString().split('T')[0],
+        },
       },
 
       {
@@ -244,8 +369,18 @@ function generateSchema(category, size, words, config) {
           "name": w.text,
           "url": `${baseUrl}/${langCode}/${w.urlSlug}`, // ✅ Use encoded slug
           "description": `Rank #${idx + 1} | ${w.level ? `CEFR ${w.level}` : 'N/A'}${w.pos ? ` | ${w.pos}` : ''}`,
-          "item": { "@type": "Thing", "name": w.text },
+          "item": { "@type": "Thing", "name": w.text,
+            // YANDEX ENHANCEMENT 6: Add word-level details
+            "yandex:frequency": idx + 1,
+            "yandex:cefr": w.level || "A1",
+            "yandex:partOfSpeech": w.pos || "unknown",
+           },
         })),
+        // YANDEX ENHANCEMENT 7: ItemList-level Yandex properties
+        "yandex:listType": "frequency_list",
+        "yandex:language": config.lang,
+        "yandex:totalItems": words.length,
+        "yandex:displayedItems": Math.min(100, words.length),
       },
 
       {
@@ -275,7 +410,11 @@ function generateSchema(category, size, words, config) {
               "text": `Yes! Export your word list instantly through our free w9999.app platform. Create flashcards, PDFs, and custom study materials.`,
             },
           },
+          
         ],
+        // YANDEX ENHANCEMENT 8: Add Yandex FAQ properties
+        "yandex:faqCategory": "language_learning",
+        "yandex:faqTopics": ["vocabulary", "frequency", "learning_methods"],
       },
 
       {
@@ -289,6 +428,27 @@ function generateSchema(category, size, words, config) {
           "target": { "@type": "EntryPoint", "urlTemplate": `${baseUrl}/search?q={search_term}` },
           "query-input": "required name=search_term",
         },
+        // YANDEX ENHANCEMENT 9: Website-level Yandex properties
+        "yandex:siteType": "educational",
+        "yandex:languages": ["en", "ru", "es"],
+        "yandex:contentCategories": ["vocabulary", "frequency_lists", "language_learning"],
+      },
+      // YANDEX ENHANCEMENT 10: Add Organization details with Russian info
+      {
+        "@type": "Organization",
+        "@id": `${baseUrl}#organization`,
+        "name": "w9999",
+        "url": baseUrl,
+        "logo": `${baseUrl}/logo.png`,
+        "description": "Free language learning platform with frequency-based vocabulary lists",
+        "sameAs": [
+          "https://t.me/w9999", // Telegram is huge in Russia
+          "https://vk.com/w9999", // VK is Russia's top social network
+        ],
+        // Russian-language organization info
+        "yandex:name_ru": "w9999 - Изучение языков",
+        "yandex:description_ru": "Бесплатная платформа для изучения языков с частотными словарями",
+        "yandex:targetAudience": ["ru", "en", "es"],
       },
     ],
   };
@@ -302,7 +462,33 @@ export default async function TopWordsDynamicPage({ params }) {
   const { category, size } = await params;
   const config = parseCategorySlug(category);
 
-  console.log(`📄 [TopWordsDynamicPage] Rendering: ${category}/${size}`);
+  // console.log(`📄 [TopWordsDynamicPage] Rendering: ${category}/${size}`);
+
+  // ADD THIS - Track scroll to bottom
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY + window.innerHeight;
+      const pageHeight = document.documentElement.scrollHeight;
+      
+      // If user scrolled to bottom (within 100px)
+      if (pageHeight - scrollPosition < 100) {
+        yandexEvents.trackFullScroll(config.lang);
+      }
+    };
+    
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [config.lang]);
+  
+  // UPDATE your word click handler
+  const handleWordClick = (word, position) => {
+    // Add this tracking line
+    yandexEvents.trackWordClick(word.text, position, config.lang);
+    
+    // Your existing navigation logic
+    // router.push(`/${config.lang}/${word.urlSlug}`);
+  };
+  
 
   if (!config) {
     console.log('❌ [TopWordsDynamicPage] Invalid category');
@@ -435,6 +621,7 @@ export default async function TopWordsDynamicPage({ params }) {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {words.map((w, idx) => (
             <Link
+            onClick={() => handleWordClick(word, idx + 1)}  // Your existing onClick
               key={w.id || idx}
               href={`/${config.lang}/${w.urlSlug}`} // ✅ USE ENCODED SLUG
               className="flex flex-col p-4 bg-white border border-gray-200 rounded-xl hover:border-blue-500 hover:shadow-lg transition-all duration-300"

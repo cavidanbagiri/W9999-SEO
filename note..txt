@@ -499,4 +499,3 @@ export default async function TopWordsDynamicPage({ params }) {
     </main>
   );
 }
-

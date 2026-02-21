@@ -1,6 +1,10 @@
 
 import { icons } from 'lucide-react';
 import './globals.css';
+import YandexMetrica from '@/components/YandexMetrica';  // ← ADD THIS LINE
+import YandexPageViewTracker from '@/components/YandexPageViewTracker';  // ← ADD THIS LINE
+
+const yandexCounterId = '106948154';  // ← ADD THIS LINE
 
 export const metadata = {
   title: 'w9999 – 10 000 most common words in 4 languages',
@@ -25,6 +29,9 @@ export default function RootLayout({ children }) {
       </head>
       <body>
         {children}
+          {/* Add page view tracker for SPA navigation */}
+        <YandexPageViewTracker />  {/* ← ADD THIS LINE */}
+        <YandexMetrica counterId={yandexCounterId} />
       </body>
     </html>
   );
