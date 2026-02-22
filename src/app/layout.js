@@ -17,6 +17,10 @@ export const metadata = {
     manifest: '/logo.svg',
     'theme-color': '#ffffff',
   },
+  // ADD THIS - Bing verification
+  other: {
+    'msvalidate.01': '292F65DAF0F8480444B96A6046C02B54',
+  },
 };
 
 export default function RootLayout({ children }) {
@@ -25,6 +29,8 @@ export default function RootLayout({ children }) {
       <head>
         <meta name="robots" content="index,follow" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        {/* ADD THIS DIRECTLY TO HEAD AS WELL (backup) */}
+        <meta name="msvalidate.01" content="292F65DAF0F8480444B96A6046C02B54" />
         {/* <link rel="icon" href="/logo.svg" /> */}
       </head>
       <body>
