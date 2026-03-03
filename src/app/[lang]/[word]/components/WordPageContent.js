@@ -12,8 +12,8 @@ export default function WordPageContent({ data, lang, targetLang, decodedWord })
 
   return (
     <>
-      <main 
-        id="main-content" 
+      <main
+        id="main-content"
         className="min-h-screen bg-gradient-to-br from-gray-50 to-white text-gray-900 transition-colors duration-200"
         role="main"
         itemScope
@@ -72,7 +72,7 @@ export default function WordPageContent({ data, lang, targetLang, decodedWord })
             <section className="mb-12" aria-labelledby="word-title">
               <div className="relative bg-gradient-to-br from-white to-gray-50 rounded-3xl p-8 md:p-10 border border-gray-100 shadow-xl mb-8 overflow-hidden">
                 <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-full -translate-y-20 translate-x-20" aria-hidden="true"></div>
-                
+
                 <div className="relative flex flex-col md:flex-row md:items-end justify-between gap-8">
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-4" role="doc-subtitle">
@@ -86,9 +86,9 @@ export default function WordPageContent({ data, lang, targetLang, decodedWord })
                         </div>
                       )}
                     </div>
-                    
+
                     {/* ✅ SINGLE H1 - SEO CRITICAL */}
-                    <h1 
+                    <h1
                       id="word-title"
                       className="text-6xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent"
                       itemProp="name"
@@ -99,7 +99,7 @@ export default function WordPageContent({ data, lang, targetLang, decodedWord })
                     <div className="flex flex-wrap items-center gap-4 mb-6">
                       {data?.ipa_pronunciation && (
                         <div className="flex items-center gap-3 bg-white/80 backdrop-blur-sm px-4 py-3 rounded-xl border border-gray-200">
-                          <span 
+                          <span
                             className="text-xl text-gray-700 font-serif"
                             itemProp="pronunciation"
                           >
@@ -115,7 +115,7 @@ export default function WordPageContent({ data, lang, targetLang, decodedWord })
                           />
                         </div>
                       )}
-                      
+
                       {data?.frequency_rank && (
                         <div className="flex items-center gap-2 px-4 py-2 bg-gray-50 rounded-lg">
                           <Target size={16} className="text-gray-600" aria-hidden="true" />
@@ -139,7 +139,7 @@ export default function WordPageContent({ data, lang, targetLang, decodedWord })
                         variant="minimal"
                         aria-label={`Listen to ${data?.word}`}
                       />
-                      <a 
+                      <a
                         href={process.env.NEXT_PUBLIC_MAIN_APP}
                         aria-label={`Save ${data?.word} to flashcards on w9999.app`}
                         className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-blue-50 to-indigo-50 text-blue-700 rounded-xl hover:from-blue-100 hover:to-indigo-100 transition-all duration-200 border border-blue-200"
@@ -157,7 +157,7 @@ export default function WordPageContent({ data, lang, targetLang, decodedWord })
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
               {/* Primary Translation */}
               {data?.translation && (
-                <div 
+                <div
                   className="lg:col-span-2"
                   itemProp="translation"
                   itemScope
@@ -172,7 +172,7 @@ export default function WordPageContent({ data, lang, targetLang, decodedWord })
                           </div>
                           <ChevronRight size={20} className="text-white/60" aria-hidden="true" />
                         </div>
-                        <p 
+                        <p
                           className="text-5xl font-bold text-white mb-2"
                           itemProp="name"
                         >
@@ -194,11 +194,11 @@ export default function WordPageContent({ data, lang, targetLang, decodedWord })
 
               {/* All Translations Summary */}
               {data?.translations?.length > 0 && (
-                <section 
+                <section
                   className="bg-white rounded-3xl p-8 border border-gray-200 shadow-lg"
                   aria-labelledby="all-translations-heading"
                 >
-                  <h3 
+                  <h3
                     id="all-translations-heading"
                     className="text-xl font-semibold text-gray-800 mb-6 flex items-center gap-2"
                   >
@@ -216,7 +216,7 @@ export default function WordPageContent({ data, lang, targetLang, decodedWord })
                       >
                         <div>
                           <div className="flex items-center gap-2 mb-1">
-                            <span 
+                            <span
                               className="text-sm font-semibold text-gray-600 uppercase"
                               itemProp="alternateName"
                             >
@@ -225,7 +225,7 @@ export default function WordPageContent({ data, lang, targetLang, decodedWord })
                             <span className="text-xs text-gray-500" aria-hidden="true">•</span>
                             <span className="text-sm text-gray-500">{trans?.language_name}</span>
                           </div>
-                          <p 
+                          <p
                             className="text-lg font-medium text-gray-900"
                             itemProp="name"
                           >
@@ -242,7 +242,7 @@ export default function WordPageContent({ data, lang, targetLang, decodedWord })
                       </div>
                     ))}
                     {data?.translations?.length > 3 && (
-                      <button 
+                      <button
                         className="w-full text-center text-blue-600 hover:text-blue-700 font-medium py-2 rounded-lg hover:bg-blue-50 transition-colors"
                         aria-label={`Show ${data?.translations?.length - 3} more translations`}
                       >
@@ -258,7 +258,7 @@ export default function WordPageContent({ data, lang, targetLang, decodedWord })
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
               {/* Meanings & Definitions */}
               {data?.meanings?.length > 0 && (
-                <section 
+                <section
                   className="sticky top-8"
                   aria-labelledby="meanings-heading"
                 >
@@ -285,14 +285,14 @@ export default function WordPageContent({ data, lang, targetLang, decodedWord })
                           </div>
                           <div className="flex-1">
                             {meaning?.pos && (
-                              <span 
+                              <span
                                 className="inline-block bg-blue-50 text-blue-700 px-3 py-1 rounded-lg text-sm font-semibold mb-3"
                                 itemProp="partOfSpeech"
                               >
                                 {meaning?.pos}
                               </span>
                             )}
-                            <p 
+                            <p
                               className="text-gray-700 leading-relaxed"
                               itemProp="description"
                             >
@@ -308,7 +308,7 @@ export default function WordPageContent({ data, lang, targetLang, decodedWord })
 
               {/* Example Sentences */}
               {data?.example_sentences?.length > 0 && (
-                <section 
+                <section
                   aria-labelledby="examples-heading"
                 >
                   <div className="flex items-center gap-3 mb-6">
@@ -332,7 +332,7 @@ export default function WordPageContent({ data, lang, targetLang, decodedWord })
                           <div className="flex-shrink-0 w-8 h-8 bg-gradient-to-br from-purple-100 to-pink-100 rounded-lg flex items-center justify-center" aria-hidden="true">
                             <span className="text-purple-700 font-bold text-sm">{index + 1}</span>
                           </div>
-                          <p 
+                          <p
                             className="text-lg italic text-gray-800 leading-relaxed"
                             itemProp="text"
                           >
@@ -341,7 +341,7 @@ export default function WordPageContent({ data, lang, targetLang, decodedWord })
                         </div>
                         {sentence?.translation && (
                           <div className="ml-12 pl-4 border-l-2 border-purple-200">
-                            <p 
+                            <p
                               className="text-gray-600"
                               itemProp="description"
                             >
@@ -370,7 +370,7 @@ export default function WordPageContent({ data, lang, targetLang, decodedWord })
                         key={`category-${index}`}
                         className="group relative"
                       >
-                        <span 
+                        <span
                           className="inline-flex items-center gap-2 px-4 py-3 bg-gradient-to-br from-gray-50 to-white text-gray-800 rounded-xl text-sm font-medium hover:from-gray-100 hover:to-gray-50 transition-all duration-200 border border-gray-200 hover:border-gray-300 shadow-sm hover:shadow"
                           itemProp="about"
                         >
@@ -432,7 +432,7 @@ export default function WordPageContent({ data, lang, targetLang, decodedWord })
                 {/* Background pattern */}
                 <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full -translate-y-20 translate-x-20" aria-hidden="true"></div>
                 <div className="absolute bottom-0 left-0 w-32 h-32 bg-white/5 rounded-full translate-y-16 -translate-x-16" aria-hidden="true"></div>
-                
+
                 <div className="relative">
                   <div className="text-center mb-8">
                     <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full mb-4">
@@ -455,7 +455,7 @@ export default function WordPageContent({ data, lang, targetLang, decodedWord })
                       </div>
                       <p className="text-blue-100 text-sm">Personalized explanations & practice</p>
                     </div>
-                    
+
                     <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
                       <div className="flex items-center gap-3 mb-3">
                         <div className="p-2 bg-white/20 rounded-lg">
@@ -465,7 +465,7 @@ export default function WordPageContent({ data, lang, targetLang, decodedWord })
                       </div>
                       <p className="text-blue-100 text-sm">Spaced repetition system</p>
                     </div>
-                    
+
                     <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
                       <div className="flex items-center gap-3 mb-3">
                         <div className="p-2 bg-white/20 rounded-lg">
@@ -495,7 +495,7 @@ export default function WordPageContent({ data, lang, targetLang, decodedWord })
                         </div>
                       </div>
                     </div>
-                    <CTAButton word={decodedWord} langFrom={langFrom}  />
+                    <CTAButton word={decodedWord} langFrom={langFrom} />
                   </div>
                 </div>
               </div>
@@ -516,8 +516,9 @@ export default function WordPageContent({ data, lang, targetLang, decodedWord })
               </div>
               <nav className="flex items-center gap-4" aria-label="Footer links">
                 <a
-                  href={process.env.NEXT_PUBLIC_MAIN_APP}
-                  className="text-blue-600 hover:text-blue-700 font-medium hover:underline"
+                  href={"https://www.w9999.app"}
+                  target="_blank"
+                  className="text-blue-600 hover:text-blue-700 font-medium hover:underline cursor-pointer"
                   rel="noopener noreferrer"
                 >
                   Open full app
@@ -550,20 +551,20 @@ export default function WordPageContent({ data, lang, targetLang, decodedWord })
         /> */}
 
 
-          <script
-  type="application/ld+json"
-  dangerouslySetInnerHTML={{
-    __html: JSON.stringify({
-      '@context': 'https://schema.org',
-      '@type': 'BreadcrumbList',
-      itemListElement: [
-        { '@type': 'ListItem', position: 1, name: 'w9999', item: BASE_URL },
-        { '@type': 'ListItem', position: 2, name: `${lang.toUpperCase()} Words`, item: `${BASE_URL}/${lang}` },
-        { '@type': 'ListItem', position: 3, name: data.word, item: `${BASE_URL}/${lang}/${encodeURIComponent(decodedWord)}` },
-      ],
-    }),
-  }}
-/>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'BreadcrumbList',
+              itemListElement: [
+                { '@type': 'ListItem', position: 1, name: 'w9999', item: BASE_URL },
+                { '@type': 'ListItem', position: 2, name: `${lang.toUpperCase()} Words`, item: `${BASE_URL}/${lang}` },
+                { '@type': 'ListItem', position: 3, name: data.word, item: `${BASE_URL}/${lang}/${encodeURIComponent(decodedWord)}` },
+              ],
+            }),
+          }}
+        />
 
       </main>
     </>

@@ -7,7 +7,7 @@ export default function CTAButton({ word, langFrom }) {
   const handleClick = (e) => {
     e.preventDefault();
     window.open(
-      `https://www.w9999.app`,
+      `https://www.w9999.app/login-register`,
     );
   };
 

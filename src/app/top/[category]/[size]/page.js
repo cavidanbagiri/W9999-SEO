@@ -3,6 +3,8 @@ import { notFound } from 'next/navigation';
 import { getTopWords, encodeWordSlug } from '@/lib/api';
 import Link from 'next/link';
 import WordListTracker from '@/components/WordListTracker';  // ← ADD THIS
+import { FaArrowRightLong } from "react-icons/fa6";
+
 // import { useEffect } from 'react';
 // import { yandexEvents } from '@/lib/yandexEvents';
 
@@ -603,15 +605,18 @@ export default async function TopWordsDynamicPage({ params }) {
               className="flex flex-col p-4 bg-white border border-gray-200 rounded-xl hover:border-blue-500 hover:shadow-lg transition-all duration-300"
             >
               {/* Rank Badge */}
-              <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center justify-between mb-3 " >
                 <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">
                   #{idx + 1}
                 </span>
-                {w.frequency && (
+                <span>
+                  <FaArrowRightLong className='text-blue-500 hover:text-blue-300 text-lg'/>
+                </span>
+                {/* {w.frequency && (
                   <span className="text-xs text-gray-400 font-mono">
                     {(w.frequency * 100).toFixed(1)}% freq
                   </span>
-                )}
+                )} */}
               </div>
 
               {/* Word - DISPLAY ORIGINAL */}
