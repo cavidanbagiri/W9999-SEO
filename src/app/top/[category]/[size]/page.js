@@ -5,13 +5,6 @@ import Link from 'next/link';
 import WordListTracker from '@/components/WordListTracker';  // ← ADD THIS
 import { FaArrowRightLong } from "react-icons/fa6";
 
-// import { useEffect } from 'react';
-// import { yandexEvents } from '@/lib/yandexEvents';
-
-// ============================================
-// CATEGORY & LANGUAGE CONFIG
-// ============================================
-
 export function parseCategorySlug(slug) {
   const mapping = {
     'english-words':      { lang: 'en', pos: null, langName: 'English', typeLabel: 'Words' },
@@ -49,6 +42,22 @@ const keywordMap = {
   'spanish-verbs': 'spanish verbs frequency, most common spanish verbs, daily spanish actions',
   'spanish-nouns': 'spanish nouns frequency, common spanish nouns, spanish noun list',
   'spanish-adjectives': 'spanish adjectives frequency, common spanish descriptors, spanish adjective list',
+  'hindi-english-words': 'अंग्रेजी शब्द, अंग्रेजी वोकैबुलरी, अंग्रेजी भाषा में 100 सबसे आम शब्द, अंग्रेजी सीखने के लिए शब्द सूची, top english words in hindi',
+  'hindi-english-verbs': 'अंग्रेजी क्रियाएं, अंग्रेजी वर्ब्स लिस्ट, सबसे आम अंग्रेजी क्रियाएं हिंदी में',
+  'hindi-english-nouns': 'अंग्रेजी संज्ञा शब्द, अंग्रेजी नाउन लिस्ट, सबसे आम अंग्रेजी संज्ञा हिंदी अर्थ सहित',
+  'hindi-english-adjectives': 'अंग्रेजी विशेषण, अंग्रेजी एडजेक्टिव्स, अंग्रेजी के विशेषण शब्द हिंदी में',
+
+  // Hindi speakers learning Russian
+  'hindi-russian-words': 'रूसी शब्द, रूसी भाषा सीखें, रूसी में 100 सबसे आम शब्द, रशियन वोकैबुलरी हिंदी में',
+  'hindi-russian-verbs': 'रूसी क्रियाएं, रशियन वर्ब्स, सबसे आम रूसी क्रियाएं हिंदी अर्थ सहित',
+  'hindi-russian-nouns': 'रूसी संज्ञा शब्द, रशियन नाउन लिस्ट, रूसी भाषा के संज्ञा शब्द',
+  'hindi-russian-adjectives': 'रूसी विशेषण, रशियन एडजेक्टिव्स, रूसी के विशेषण शब्द',
+
+  // Hindi speakers learning Spanish
+  'hindi-spanish-words': 'स्पेनिश शब्द, स्पैनिश वोकैबुलरी, स्पेनिश भाषा में 100 सबसे आम शब्द, स्पेनिश सीखें हिंदी में',
+  'hindi-spanish-verbs': 'स्पेनिश क्रियाएं, स्पैनिश वर्ब्स, सबसे आम स्पेनिश क्रियाएं हिंदी में',
+  'hindi-spanish-nouns': 'स्पेनिश संज्ञा शब्द, स्पैनिश नाउन लिस्ट, स्पेनिश भाषा के संज्ञा शब्द',
+  'hindi-spanish-adjectives': 'स्पेनिश विशेषण, स्पैनिश एडजेक्टिव्स, स्पेनिश के विशेषण शब्द हिंदी में',
 };
 
 const descriptionMap = {
@@ -64,6 +73,16 @@ const descriptionMap = {
   'spanish-verbs': 'Aprende los verbos en español más frecuentes. Verbos de acción esenciales en español.',
   'spanish-nouns': 'Descubre los sustantivos en español más comunes. Lista de sustantivos ordenada por frecuencia.',
   'spanish-adjectives': 'Domina los adjetivos en español más útiles. Palabras descriptivas ordenadas por frecuencia.',
+
+  // ADD HINDI NATIVE LANGUAGE DESCRIPTIONS
+  'hindi-english-words': 'अंग्रेजी भाषा के 1000 सबसे आम शब्द हिंदी अर्थ सहित। आवृत्ति रैंकिंग और उदाहरणों के साथ अंग्रेजी वोकैबुलरी सीखें। English vocabulary for Hindi speakers.',
+  'hindi-english-verbs': 'सबसे अधिक उपयोग होने वाली अंग्रेजी क्रियाएं हिंदी अर्थ और उदाहरणों के साथ। Most common English verbs for Hindi speakers.',
+  
+  'hindi-russian-words': 'रूसी भाषा के 1000 सबसे आम शब्द हिंदी अर्थ सहित। आवृत्ति रैंकिंग के साथ रूसी वोकैबुलरी सीखें। Russian vocabulary for Hindi speakers.',
+  'hindi-russian-verbs': 'सबसे अधिक उपयोग होने वाली रूसी क्रियाएं हिंदी अर्थ सहित। Most common Russian verbs for Hindi speakers.',
+  
+  'hindi-spanish-words': 'स्पेनिश भाषा के 1000 सबसे आम शब्द हिंदी अर्थ सहित। आवृत्ति रैंकिंग के साथ स्पेनिश वोकैबुलरी सीखें। Spanish vocabulary for Hindi speakers.',
+  'hindi-spanish-verbs': 'सबसे अधिक उपयोग होने वाली स्पेनिश क्रियाएं हिंदी अर्थ सहित। Most common Spanish verbs for Hindi speakers.',
 };
 
 const features = [
