@@ -566,6 +566,74 @@ export default function WordPageContent({ data, lang, targetLang, decodedWord })
           }}
         />
 
+        {/* DefinedTerm Schema */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'DefinedTerm',
+              'name': data.word,
+              'description': `Learn "${data.word}" (${data.level || 'Beginner'}) with pronunciation, definition, examples, and translation.`,
+              'inLanguage': lang,
+              'alternateName': data.translation,
+              'pronunciation': data.ipa_pronunciation ? `/${data.ipa_pronunciation}/` : undefined,
+              'position': data.frequency_rank,
+              'additionalProperty': [
+                { '@type': 'PropertyValue', name: 'CEFR Level', value: data.level },
+                { '@type': 'PropertyValue', name: 'Part of Speech', value: data.meanings?.[0]?.pos },
+                { '@type': 'PropertyValue', name: 'Frequency Rank', value: data.frequency_rank },
+              ],
+              'url': `${BASE_URL}/${lang}/${encodeURIComponent(decodedWord)}`,
+              'sameAs': data.translations?.map(t => `${BASE_URL}/${t.language_code}/${encodeURIComponent(t.translated_text)}`),
+              // Yandex-specific properties
+              'yandex:frequency': data.frequency_rank,
+              'yandex:cefrLevel': data.level,
+              'yandex:partOfSpeech': data.meanings?.[0]?.pos,
+            }),
+          }}
+        />
+
+        {/* FAQPage Schema */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'FAQPage',
+              'mainEntity': [
+                {
+                  '@type': 'Question',
+                  'name': `What does "${data.word}" mean?`,
+                  'acceptedAnswer': {
+                    '@type': 'Answer',
+                    'text': data.meanings?.[0]?.definition || `"${data.word}" is a ${data.meanings?.[0]?.pos || 'word'} in ${data.source_language_name}.`,
+                  },
+                },
+                {
+                  '@type': 'Question',
+                  'name': `How to pronounce "${data.word}"?`,
+                  'acceptedAnswer': {
+                    '@type': 'Answer',
+                    'text': data.ipa_pronunciation ? `The pronunciation of "${data.word}" is /${data.ipa_pronunciation}/.` : `Listen to the audio pronunciation above.`,
+                  },
+                },
+                {
+                  '@type': 'Question',
+                  'name': `What is the translation of "${data.word}"?`,
+                  'acceptedAnswer': {
+                    '@type': 'Answer',
+                    'text': data.translation ? `"${data.word}" translates to "${data.translation}" in ${data.targetLangName}.` : `See translations section for multiple languages.`,
+                  },
+                },
+              ],
+              // Yandex-specific properties
+              'yandex:faqCategory': 'language_learning',
+              'yandex:faqTopics': ['vocabulary', 'pronunciation', 'translation'],
+            }),
+          }}
+        />
+
       </main>
     </>
   );

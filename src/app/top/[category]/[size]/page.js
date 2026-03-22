@@ -61,18 +61,18 @@ const keywordMap = {
 };
 
 const descriptionMap = {
-  'english-words': 'Master the most common English words with frequency rankings, CEFR levels, and pronunciation. Free vocabulary list for all language levels.',
-  'english-verbs': 'Learn the most frequently used English verbs with examples and CEFR levels. Essential action words for fluent English.',
-  'english-nouns': 'Discover the most common English nouns ranked by usage frequency. Build vocabulary with real-world examples.',
-  'english-adjectives': 'Master descriptive English adjectives ranked by frequency. Learn the most useful adjectives for everyday communication.',
-  'russian-words': 'Изучите самые частые русские слова с рейтингом частоты и уровнями CEFR. Бесплатный список словаря.',
-  'russian-verbs': 'Выучите самые используемые русские глаголы. Существенные глаголы русского языка с примерами.',
-  'russian-nouns': 'Откройте для себя самые частые русские существительные. Словарь существительных русского языка.',
-  'russian-adjectives': 'Овладейте описательными русскими прилагательными. Самые полезные прилагательные русского языка.',
-  'spanish-words': 'Domina las palabras en español más comunes con ranking de frecuencia y niveles CEFR. Lista de vocabulario gratuita.',
-  'spanish-verbs': 'Aprende los verbos en español más frecuentes. Verbos de acción esenciales en español.',
-  'spanish-nouns': 'Descubre los sustantivos en español más comunes. Lista de sustantivos ordenada por frecuencia.',
-  'spanish-adjectives': 'Domina los adjetivos en español más útiles. Palabras descriptivas ordenadas por frecuencia.',
+  'english-words': 'Download the most common English words with audio pronunciation, CEFR levels, and example sentences. Free vocabulary list for beginners to advanced learners.',
+  'english-verbs': 'Master the most frequent English verbs with conjugations, examples, and CEFR levels. Essential action words for fluent communication.',
+  'english-nouns': 'Discover the most common English nouns ranked by frequency. Build your vocabulary with real-world examples and audio.',
+  'english-adjectives': 'Learn descriptive English adjectives sorted by usage frequency. Perfect for expanding your vocabulary and improving writing.',
+  'russian-words': 'Скачайте самые частые русские слова с аудио произношением, уровнями CEFR и примерами. Бесплатный список слов для всех уровней.',
+  'russian-verbs': 'Изучите самые используемые русские глаголы с спряжениями, примерами и уровнями CEFR. Необходимые глаголы для свободного общения.',
+  'russian-nouns': 'Откройте для себя самые частые русские существительные с аудио и примерами. Улучшите свой словарный запас.',
+  'russian-adjectives': 'Овладейте описательными русскими прилагательными, отсортированными по частоте использования. Идеально для расширения словарного запаса.',
+  'spanish-words': 'Descarga las palabras más comunes en español con pronunciación de audio, niveles CEFR y ejemplos. Lista de vocabulario gratuita para todos los niveles.',
+  'spanish-verbs': 'Domina los verbos en español más frecuentes con conjugaciones, ejemplos y niveles CEFR. Verbos esenciales para una comunicación fluida.',
+  'spanish-nouns': 'Descubre los sustantivos en español más comunes ordenados por frecuencia. Amplía tu vocabulario con ejemplos reales y audio.',
+  'spanish-adjectives': 'Aprende adjetivos descriptivos en español ordenados por frecuencia de uso. Perfecto para expandir tu vocabulario y mejorar la escritura.',
 
   // ADD HINDI NATIVE LANGUAGE DESCRIPTIONS
   'hindi-english-words': 'अंग्रेजी भाषा के 1000 सबसे आम शब्द हिंदी अर्थ सहित। आवृत्ति रैंकिंग और उदाहरणों के साथ अंग्रेजी वोकैबुलरी सीखें। English vocabulary for Hindi speakers.',
@@ -144,7 +144,7 @@ export async function generateMetadata({ params }) {
     'en': category.replace(/^russian-|^spanish-/, 'english-'),
   };
 
-  const title = `Top ${size} ${config.langName} ${config.typeLabel} | Frequency List & CEFR Levels`;
+  const title = `🔝 Top ${size} ${config.langName} ${config.typeLabel} | Free PDF, Audio, Frequency List & CEFR Levels`;
   const description = descriptionMap[category] || `Learn the top ${size} ${config.langName} ${config.typeLabel.toLowerCase()}.`;
 
 
@@ -188,13 +188,8 @@ export async function generateMetadata({ params }) {
 
     // YANDEX ENHANCEMENT 1: Add Russian-language metadata for Russian pages
     ...(config.lang === 'ru' && {
-      // Yandex优先考虑俄语元数据
-      'yandex': {
-        'title': ruTitle,
-        'description': ruDescription,
-        'noindex': false,
-        'nofollow': false,
-      },
+      'yandex-title': ruTitle,
+      'yandex-description': ruDescription,
     }),
     ////////////////////////////////////////////////////////////////////////////////////
     

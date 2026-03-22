@@ -27,8 +27,18 @@ export async function generateMetadata({ params }) {
       };
     }
 
-    const title = `${data.word} in ${data.source_language_name} | w9999`;
-    const description = `Learn "${data.word}" (${data.level || 'Beginner'}) with pronunciation, definition, examples, and translation. Free vocabulary tool.`;
+    // Enhanced title with emoji, rank, level
+    const rankText = data.frequency_rank ? ` | Rank #${data.frequency_rank}` : '';
+    const levelText = data.level ? ` (${data.level})` : '';
+    const title = `🌟 "${data.word}" in ${data.source_language_name}${levelText}${rankText} | Learn with Audio & Examples | w9999`;
+    
+    // Enhanced description
+    const description = `Learn "${data.word}"${levelText} with native pronunciation, definition, example sentences, and translation. Free vocabulary tool with audio and flashcards.`;
+
+    // Yandex-specific title/description for Russian pages
+    const isRussian = lang === 'ru';
+    const yandexTitle = isRussian ? `"${data.word}" на русском языке${levelText}${rankText} | Произношение, перевод, примеры` : null;
+    const yandexDescription = isRussian ? `Изучите слово "${data.word}"${levelText}. Произношение, определение, примеры предложений и перевод. Бесплатный инструмент для изучения лексики.` : null;
 
     return {
       metadataBase: new URL(baseUrl),
@@ -37,6 +47,8 @@ export async function generateMetadata({ params }) {
 
       alternates: {
         canonical: pageUrl,
+        // hreflang for other language versions of the same word (if we had them)
+        // languages: {}, // optional
       },
 
       openGraph: {
@@ -44,11 +56,28 @@ export async function generateMetadata({ params }) {
         description,
         url: pageUrl,
         type: 'article',
-        siteName: 'w9999',
+        siteName: 'w9999 - Learn Languages',
         images: [{ url: `${baseUrl}/logo.png`, width: 1200, height: 630, alt: data.word }],
       },
 
-      // ✅ CRITICAL CHANGE: Block indexing but allow link following
+      // Yandex-specific meta tags
+      other: {
+        'yandex_recommendations': 'true',
+        'yandex_page_type': 'word_definition',
+        'yandex_content_language': lang,
+        'yandex_educational_level': data.level || 'A1-C2',
+        'yandex_resource_type': 'vocabulary',
+        // Russian-specific
+        ...(isRussian && {
+          'yandex_verified_content': 'true',
+          'yandex_audience': 'russian_language_learners',
+        }),
+        // Add Yandex title/description if Russian
+        ...(yandexTitle && { 'yandex-title': yandexTitle }),
+        ...(yandexDescription && { 'yandex-description': yandexDescription }),
+      },
+
+      // Keep indexing blocked as per user preference
       robots: {
         index: false,
         follow: true,
