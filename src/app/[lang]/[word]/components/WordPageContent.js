@@ -2,6 +2,7 @@
 import AudioPlayer from './AudioPlayer';
 import HumanRedirect from './HumanRedirect';
 import CTAButton from './CTAButton';
+import AIChatSection from './AIChatSection';
 import { Volume2, BookOpen, Star, Users, Target, Award, ChevronRight, Globe } from 'lucide-react';
 
 export default function WordPageContent({ data, lang, targetLang, decodedWord }) {
@@ -425,6 +426,9 @@ export default function WordPageContent({ data, lang, targetLang, decodedWord })
                 </section>
               )}
             </div>
+
+            {/* AI Chat Section */}
+            <AIChatSection word={data?.word} lang={lang} />
 
             {/* CTA Section */}
             <div className="mt-16 z-10">

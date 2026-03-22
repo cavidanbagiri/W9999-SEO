@@ -3,6 +3,8 @@
 import axios from 'axios';
 
 const BASE = 'https://api.w9999.app';
+// const BASE = 'http://localhost:8000';
+
 
 // Helper functions for encoding/decoding
 export function encodeWordSlug(word) {
@@ -83,4 +85,32 @@ export async function getTopWords(languageCode, limit = 1000, pos = null) {
     console.error(`💥 [getTopWords] Error for ${languageCode} (POS: ${pos || 'mixed'}):`, e.message);
     return [];
   }
+}
+
+
+/**
+ * Generate AI-powered language learning content for a given prompt.
+ * Returns a streaming response that can be consumed as SSE.
+ * @param {string} prompt - The word/phrase to learn about
+ * @param {string} language - Target language (default 'auto')
+ * @returns {Promise<Response>} Fetch response object for streaming
+ */
+export async function generateAIWord(prompt, language = 'auto') {
+  const url = `${BASE}/api/public/generateaiword`;
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      prompt: prompt,
+      language: language
+    })
+  });
+
+  if (!response.ok) {
+    throw new Error(`AI generation failed: ${response.status}`);
+  }
+
+  return response;
 }
