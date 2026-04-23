@@ -7,6 +7,7 @@ import {
   IoAlbums,
   IoChevronForward
 } from 'react-icons/io5';
+import { FaArrowRightLong } from "react-icons/fa6";
 
 
 import { Sparkles } from 'lucide-react';
@@ -14,7 +15,7 @@ import { Sparkles } from 'lucide-react';
 
 export default function Home() {
 
-  
+
   const features = [
     {
       icon: <IoLanguage className="text-3xl" />,
@@ -56,10 +57,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 pb-20 overflow-hidden">
       {/* Animated Background Elements */}
-      
       <div className="fixed inset-0 -z-10 pointer-events-none">
-
-      
         <div
           className="absolute top-20 left-10 w-72 h-72 bg-purple-100 rounded-full blur-3xl opacity-20"
           style={{ animation: 'float 8s ease-in-out infinite' }}
@@ -77,22 +75,26 @@ export default function Home() {
       {/* Navigation */}
       <nav
         className="bg-white/80 backdrop-blur-md border-b border-gray-200 sticky top-0 z-40"
-        // style={fadeInStyle(100)}
+      // style={fadeInStyle(100)}
       >
       </nav>
 
       {/* Hero Section */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-2">
-        <div style={{fontFamily: 'IBM Plex Sans', fontWeight: 400}}
-        className="text-center">
-          
+        <div style={{ fontFamily: 'IBM Plex Sans', fontWeight: 400 }}
+          className="text-center">
+
           {/* Badge */}
 
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-100  text-blue-700 rounded-full text-sm font-medium mb-6">
-              <Sparkles size={16} />
-              <span>9,000+ Most Common Words • Completely Free</span>
-            </div>
-          
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-100  text-blue-700 rounded-full text-sm font-medium mb-6 cursor-pointer">
+            <Sparkles size={16} />
+            <a href="https://www.w9999.tech/top/english-words/1000" className="cursor-pointer">
+              9,000+ Most Common Words • Completely Free
+            </a>
+            <FaArrowRightLong className="text-blue-700" />
+
+          </div>
+
 
           {/* Main Heading */}
           <h1
@@ -105,13 +107,33 @@ export default function Home() {
             </span>
           </h1>
 
-          
+
 
           {/* CTA Buttons */}
           <div
             // style={fadeUpStyle(500)}
             className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16"
           >
+            <a
+              href="https://www.w9999.tech/top/english-words/100"
+              className="relative group bg-white text-black border-2 border-purple-300 px-8 py-4 rounded-2xl hover:shadow-xl transition-all duration-300 font-semibold text-lg flex items-center space-x-2 font-sans hover:scale-105 active:scale-95 animate-soft-pulse"
+            >
+              {/* Small sparkle icon */}
+              <span className="absolute -left-2 -top-2 text-yellow-400 text-xl animate-bounce-slow">
+                ✨
+              </span>
+
+              <span className="relative">
+                📚 <span className="font-bold">Explore Words</span>
+              </span>
+
+              <IoChevronForward className="text-lg group-hover:translate-x-2 transition-transform duration-300" />
+
+              {/* Hover tooltip effect */}
+              <span className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+                Start with 100 most common words →
+              </span>
+            </a>
             <a
               href="https://www.w9999.app/login-register"
               className="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-8 py-4 rounded-2xl hover:shadow-xl transition-all font-semibold text-lg flex items-center space-x-2 font-sans hover:scale-105 active:scale-95"
@@ -120,7 +142,7 @@ export default function Home() {
               <IoChevronForward className="text-lg group-hover:translate-x-1 transition-transform" />
             </a>
             <a
-              href="https://www.w9999.app/ai-chat" 
+              href="https://www.w9999.app/ai-chat"
               className="border-2 border-gray-300 text-gray-700 px-8 py-4 rounded-2xl hover:border-purple-300 hover:bg-purple-50 transition-all font-semibold text-lg flex items-center space-x-2 font-sans hover:scale-105 active:scale-95"
             >
               <IoSparkles className="text-purple-600" />
@@ -128,14 +150,14 @@ export default function Home() {
             </a>
           </div>
 
-          
+
         </div>
       </section>
 
       {/* Hero Section */}
       <section className=" pb-6 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         <div className="text-center max-w-4xl mx-auto">
-          
+
           {/* Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-3xl mx-auto">
             <div className="bg-white  backdrop-blur-sm rounded-2xl p-6 border border-gray-100 shadow">
@@ -198,7 +220,7 @@ export default function Home() {
         </div>
       </section>
 
-      
+
 
       {/* CTA Section */}
       <section className="bg-gradient-to-r from-purple-600 to-blue-600 py-20">

@@ -4,12 +4,17 @@ import HumanRedirect from './HumanRedirect';
 import CTAButton from './CTAButton';
 import AIChatSection from './AIChatSection';
 import { Volume2, BookOpen, Star, Users, Target, Award, ChevronRight, Globe } from 'lucide-react';
+import LogoWithBack from '@/components/LogoWithBack';
+
+
 
 export default function WordPageContent({ data, lang, targetLang, decodedWord }) {
+  
+  
+  const BASE_URL = process.env.NEXT_PUBLIC_SEO_DOMAIN;
+
   const langFrom = lang;
   const langTo = targetLang;
-
-  const BASE_URL = process.env.NEXT_PUBLIC_SEO_DOMAIN;
 
   return (
     <>
@@ -38,7 +43,7 @@ export default function WordPageContent({ data, lang, targetLang, decodedWord })
           {/* Header */}
           <header className="mb-12 pt-8" role="banner">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-              <div className="flex items-center gap-3">
+            {/*   <div className="flex items-center gap-3">
                 <div className="bg-gradient-to-br from-blue-600 to-indigo-600 w-10 h-10 rounded-xl flex items-center justify-center shadow-lg">
                   <span className="text-white font-bold text-xl" aria-label="w9999 logo">W</span>
                 </div>
@@ -50,7 +55,9 @@ export default function WordPageContent({ data, lang, targetLang, decodedWord })
                     9,000+ most common words in 3 languages
                   </p>
                 </div>
-              </div>
+              </div> */}
+              <LogoWithBack />
+
               <div className="flex items-center gap-2 text-sm bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full border border-gray-200 shadow-sm">
                 <div className="flex items-center gap-1 text-green-600">
                   <Volume2 size={14} aria-hidden="true" />
@@ -141,12 +148,14 @@ export default function WordPageContent({ data, lang, targetLang, decodedWord })
                         aria-label={`Listen to ${data?.word}`}
                       />
                       <a
-                        href={process.env.NEXT_PUBLIC_MAIN_APP}
+                        href={process.env.NEXT_PUBLIC_APP_URL}
                         aria-label={`Save ${data?.word} to flashcards on w9999.app`}
                         className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-blue-50 to-indigo-50 text-blue-700 rounded-xl hover:from-blue-100 hover:to-indigo-100 transition-all duration-200 border border-blue-200"
                       >
                         <Star size={18} aria-hidden="true" />
-                        <span className="font-semibold">Save to Flashcards</span>
+                        <span
+                          className="font-semibold cursor-pointer">Save to Flashcards
+                        </span>
                       </a>
                     </div>
                   </div>
