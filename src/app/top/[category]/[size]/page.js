@@ -4,6 +4,9 @@ import { getTopWords, encodeWordSlug } from '@/lib/api';
 import Link from 'next/link';
 import WordListTracker from '@/components/WordListTracker';  // ← ADD THIS
 import { FaArrowRightLong } from "react-icons/fa6";
+import NativeLanguageSelectorWrapper from '@/components/NativeLanguageSelectorWrapper';
+
+import WordListWithTranslations from '@/components/WordListWithTranslations';
 
 export function parseCategorySlug(slug) {
   const mapping = {
@@ -478,9 +481,6 @@ export default async function TopWordsDynamicPage({ params }) {
   const { category, size } = await params;
   const config = parseCategorySlug(category);
 
-  // console.log(`📄 [TopWordsDynamicPage] Rendering: ${category}/${size}`);
-
-  
 
   if (!config) {
     console.log('❌ [TopWordsDynamicPage] Invalid category');
@@ -496,11 +496,9 @@ export default async function TopWordsDynamicPage({ params }) {
   const words = await getTopWords(config.lang, limit, config.pos);
 
   if (!words || words.length === 0) {
-    console.log('❌ [TopWordsDynamicPage] No words found');
     notFound();
   }
 
-  console.log(`✅ [TopWordsDynamicPage] Rendering ${words.length} words`);
 
   const baseUrl = process.env.NEXT_PUBLIC_SEO_DOMAIN;
   const sizes = ['100', '300', '500', '1000', '2000', '3000', '5000', '10000'];
@@ -529,26 +527,10 @@ export default async function TopWordsDynamicPage({ params }) {
         </div>
       </div>
 
-      {/* FEATURES GRID - unchanged */}
-      <div className="max-w-6xl mx-auto px-4 py-16">
-        <h2 className="text-3xl font-bold text-gray-900 mb-12 text-center">Why Choose Our Lists?</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {features.map((feature, idx) => (
-            <div
-              key={idx}
-              className="group bg-white rounded-2xl p-8 border border-gray-200 hover:border-blue-500 hover:shadow-2xl transition-all duration-300"
-            >
-              <div className="text-4xl mb-4 group-hover:scale-110 transition-transform">
-                {feature.icon}
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">
-                {feature.title}
-              </h3>
-              <p className="text-gray-600 text-sm leading-relaxed">
-                {feature.description}
-              </p>
-            </div>
-          ))}
+      {/* NATIVE LANGUAGE SELECTOR */}
+      <div className="bg-white border-b border-gray-200">
+        <div className="max-w-6xl mx-auto px-4 py-8">
+          <NativeLanguageSelectorWrapper />
         </div>
       </div>
 
@@ -596,65 +578,58 @@ export default async function TopWordsDynamicPage({ params }) {
       </div>
 
       {/* WORD COUNT - unchanged */}
-      <div className="bg-white border-b border-gray-200">
+      {/* <div className="bg-white border-b border-gray-200">
         <div className="max-w-6xl mx-auto px-4 py-4">
           <p className="text-gray-700">
             Showing <strong className="text-gray-900">{words.length.toLocaleString()}</strong> {config.typeLabel.toLowerCase()}
           </p>
         </div>
-      </div>
+      </div> */}
 
       {/* ✅ WORD LIST SECTION - CRITICAL FIX */}
       <section className="max-w-6xl mx-auto px-4 py-12">
-        <h2 className="text-2xl font-bold text-gray-900 mb-8">
+        {/* <h2 className="text-2xl font-bold text-gray-900 mb-8">
           Complete {config.typeLabel} List ({words.length.toLocaleString()})
-        </h2>
+        </h2> */}
+        
+        {/* Word list with choosen lang translations */}
+      <WordListWithTranslations 
+        words={words}
+        config={{
+          lang: config.lang,
+          typeLabel: config.typeLabel,
+          pos: config.pos
+        }}
+        category={category}
+        size={size}
+      />
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          <WordListTracker language={config.lang} />
-          {words.map((w, idx) => (
-            <Link
-              key={w.id || idx}
-              href={`/${config.lang}/${w.urlSlug}`} // ✅ USE ENCODED SLUG
-              className="flex flex-col p-4 bg-white border border-gray-200 rounded-xl hover:border-blue-500 hover:shadow-lg transition-all duration-300"
+
+        
+      </section>
+
+      {/* FEATURES GRID - unchanged */}
+      <div className="max-w-6xl mx-auto px-4 py-16">
+        <h2 className="text-3xl font-bold text-gray-900 mb-12 text-center">Why Choose Our Lists?</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {features.map((feature, idx) => (
+            <div
+              key={idx}
+              className="group bg-white rounded-2xl p-8 border border-gray-200 hover:border-blue-500 hover:shadow-2xl transition-all duration-300"
             >
-              {/* Rank Badge */}
-              <div className="flex items-center justify-between mb-3 " >
-                <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">
-                  #{idx + 1}
-                </span>
-                <span>
-                  <FaArrowRightLong className='text-blue-500 hover:text-blue-300 text-lg'/>
-                </span>
-                {/* {w.frequency && (
-                  <span className="text-xs text-gray-400 font-mono">
-                    {(w.frequency * 100).toFixed(1)}% freq
-                  </span>
-                )} */}
+              <div className="text-4xl mb-4 group-hover:scale-110 transition-transform">
+                {feature.icon}
               </div>
-
-              {/* Word - DISPLAY ORIGINAL */}
-              <h3 className="text-lg font-bold text-blue-600 hover:underline mb-3">
-                {w.text}
+              <h3 className="text-xl font-bold text-gray-900 mb-3">
+                {feature.title}
               </h3>
-
-              {/* Badges */}
-              <div className="flex gap-2 flex-wrap mt-auto">
-                {w.level && (
-                  <span className="px-3 py-1 bg-blue-50 text-blue-700 text-xs font-bold rounded-full">
-                    {w.level}
-                  </span>
-                )}
-                {w.pos && (
-                  <span className="px-3 py-1 bg-gray-100 text-gray-600 text-xs font-bold rounded-full uppercase">
-                    {w.pos}
-                  </span>
-                )}
-              </div>
-            </Link>
+              <p className="text-gray-600 text-sm leading-relaxed">
+                {feature.description}
+              </p>
+            </div>
           ))}
         </div>
-      </section>
+      </div>
 
       {/* BOTTOM CTA - unchanged */}
       <div className="bg-gradient-to-r from-blue-50 to-indigo-50 mt-16 border-t border-gray-200">
